@@ -106,24 +106,27 @@ namespace ConsoleSnakeCompetition
                     }
                 }
 
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
-                if (keyInfo.Key == ConsoleKey.UpArrow && grid.GetValue(snake.GetX() - 1, snake.GetY()) != '*')
-                {
-                    snake.Move(Snake.Direction.Up);
-                }
-                else if (keyInfo.Key == ConsoleKey.DownArrow && grid.GetValue(snake.GetX() + 1, snake.GetY()) != '*')
-                {
-                    snake.Move(Snake.Direction.Down);
-                }
-                else if (keyInfo.Key == ConsoleKey.LeftArrow && grid.GetValue(snake.GetX(), snake.GetY() - 1) != '*')
-                {
-                    snake.Move(Snake.Direction.Left);
-                }
-                else if (keyInfo.Key == ConsoleKey.RightArrow && grid.GetValue(snake.GetX(), snake.GetY() + 1) != '*')
-                {
-                    snake.Move(Snake.Direction.Right);
-                }
+                    if (keyInfo.Key == ConsoleKey.UpArrow && grid.GetValue(snake.GetX() - 1, snake.GetY()) != '*')
+                    {
+                        snake.Move(Snake.Direction.Up);
+                    }
+                    else if (keyInfo.Key == ConsoleKey.DownArrow && grid.GetValue(snake.GetX() + 1, snake.GetY()) != '*')
+                    {
+                        snake.Move(Snake.Direction.Down);
+                    }
+                    else if (keyInfo.Key == ConsoleKey.LeftArrow && grid.GetValue(snake.GetX(), snake.GetY() - 1) != '*')
+                    {
+                        snake.Move(Snake.Direction.Left);
+                    }
+                    else if (keyInfo.Key == ConsoleKey.RightArrow && grid.GetValue(snake.GetX(), snake.GetY() + 1) != '*')
+                    {
+                        snake.Move(Snake.Direction.Right);
+                    }
+                } 
             }
         }
 
