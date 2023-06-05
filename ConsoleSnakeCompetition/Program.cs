@@ -32,17 +32,28 @@ namespace ConsoleSnakeCompetition
                 
             Snake snake = new Snake(new Point(startX, startY), 5);
             snake.Draw();
+
+            int currentX = startX;
+            int currentY = startY;
             while (true)
             {
                 if (grid.GetValue(snake.GetX(), snake.GetY()) == '%')
                 {
-                    Console.Clear();
-                    Console.WriteLine("We did it!!!");
-                    break;
-                }
+                    Random rnd = new Random();
+                    int goalX = rnd.Next(1, grid.RowCount() - 2);
+                    int goalY = rnd.Next(1, grid.ColumnCount() - 2);
+                    while (grid.GetValue(goalX, goalY) == '*')
+                    {
+                        goalX = rnd.Next(1, grid.RowCount() - 2);
+                        goalY = rnd.Next(1, grid.ColumnCount() - 2);
+                    }
+                    grid.SetValue(goalX, goalY, '%');
 
-                int currentX = startX;
-                int currentY = startY;
+                    Console.SetCursorPosition(goalY, goalX);
+                    Console.Write('%');
+
+                    path = AStarSearch(grid, currentX, currentY, goalX, goalY);
+                }
 
                 foreach (Cell cell in path)
                 {
