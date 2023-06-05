@@ -35,6 +35,7 @@ namespace ConsoleSnakeCompetition
 
             int currentX = startX;
             int currentY = startY;
+            Console.CursorVisible = false;
             while (true)
             {
                 if (grid.GetValue(snake.GetX(), snake.GetY()) == '%')
@@ -67,7 +68,7 @@ namespace ConsoleSnakeCompetition
                     currentX = cell.X;
                     currentY = cell.Y;
 
-                    Thread.Sleep(100);
+                    Thread.Sleep(10);
                 }
 
                 /*ConsoleKeyInfo keyInfo = Console.ReadKey(true);
@@ -367,8 +368,18 @@ namespace ConsoleSnakeCompetition
             }
         }
 
+        public void Erase()
+        {
+            foreach (var snakePart in _body)
+            {
+                snakePart.Erase();
+            }
+        }
+
         public void AddLength(int length)
         {
+            Erase();
+
             var newHead = new SnakePart(new Point(Head.Position.X, Head.Position.Y), Symbol);
             length = _body.Length + length;
             _body = Enumerable
