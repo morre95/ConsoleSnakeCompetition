@@ -32,7 +32,7 @@ namespace ConsoleSnakeCompetition
 
             Stack<Cell> path = AStarSearch(grid, startX, startY, goalXY[0], goalXY[1]);
                 
-            Snake snake = new Snake(new Point(startX, startY), 5);
+            Snake snake = new Snake(new Point(startX, startY), 5, '#', true);
             snake.Draw();
 
             Snake computer = new Snake(new Point(startX, startY), 5, '^');
