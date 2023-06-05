@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using static ConsoleSnakeCompetition.Program;
 
 namespace ConsoleSnakeCompetition;
 
@@ -7,19 +8,14 @@ internal class Program
     static void Main(string[] args)
     {
         int rows = 20, cols = 80;
+        Grid<char> grid = PopulateEmptyGrid(rows, cols);
+
         string toPrint = "";
-        for (int row = 0; row < rows; row++)
+        for (int row = 0; row < grid.RowCount(); row++)
         {
-            for (int col = 0; col < cols; col++)
+            for (int col = 0; col < grid.ColumnCount(); col++)
             {
-                if (row == 0 || row > rows - 2 || col == 0 || col > cols - 2)
-                {
-                    toPrint += "*";
-                }
-                else
-                {
-                    toPrint += " ";
-                }
+                toPrint += grid.GetValue(row, col);
             }
             toPrint += "\n";
         }
@@ -32,23 +28,45 @@ internal class Program
         {
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
-            if (keyInfo.Key == ConsoleKey.UpArrow)
+            if (keyInfo.Key == ConsoleKey.UpArrow && grid.GetValue(snake.GetX() - 1, snake.GetY()) != '*')
             {
                 snake.Move(Snake.Direction.Up);
             }
-            else if (keyInfo.Key == ConsoleKey.DownArrow)
+            else if (keyInfo.Key == ConsoleKey.DownArrow && grid.GetValue(snake.GetX() + 1, snake.GetY()) != '*')
             {
                 snake.Move(Snake.Direction.Down);
             }
-            else if (keyInfo.Key == ConsoleKey.LeftArrow)
+            else if (keyInfo.Key == ConsoleKey.LeftArrow && grid.GetValue(snake.GetX(), snake.GetY() - 1) != '*')
             {
                 snake.Move(Snake.Direction.Left);
             }
-            else if (keyInfo.Key == ConsoleKey.RightArrow)
+            else if (keyInfo.Key == ConsoleKey.RightArrow && grid.GetValue(snake.GetX(), snake.GetY() + 1) != '*')
             {
                 snake.Move(Snake.Direction.Right);
             }
         }
+    }
+
+    public static Grid<char> PopulateEmptyGrid(int gridRows, int gridColumns)
+    {
+        Grid<char> gridList = new CharGrid(gridRows, gridColumns);
+
+        for (int row = 0; row < gridRows; row++)
+        {
+            for (int col = 0; col < gridColumns; col++)
+            {
+                if (row == 0 || row > gridRows - 2 || col == 0 || col > gridColumns - 2)
+                {
+                    gridList.SetValue(row, col, '*');
+                }
+                else
+                {
+                    gridList.SetValue(row, col, ' ');
+                }
+            }
+        }
+
+        return gridList;
     }
 
     public class SnakePart
@@ -151,6 +169,53 @@ internal class Program
             }
             _body[0] = newHead;
             Draw();
+        }
+
+        public int GetX()
+        {
+            return Head.Position.X;
+        }
+
+        public int GetY()
+        {
+            return Head.Position.Y;
+        }
+    }
+
+    public abstract class Grid<T>
+    {
+        private T[,] gridRepository;
+
+        public Grid(int rows, int columns)
+        {
+            gridRepository = new T[rows, columns];
+        }
+
+        virtual public T GetValue(int rowNumber, int columnNumber)
+        {
+            return gridRepository[rowNumber, columnNumber];
+        }
+
+        virtual public void SetValue(int rowNumber, int columnNumber, T inputItem)
+        {
+            gridRepository[rowNumber, columnNumber] = inputItem;
+        }
+
+        virtual public int RowCount()
+        {
+            return gridRepository.GetLength(0);
+        }
+
+        virtual public int ColumnCount()
+        {
+            return gridRepository.GetLength(1);
+        }
+    }
+
+    public class CharGrid : Grid<char>
+    {
+        public CharGrid(int rows, int columns) : base(rows, columns)
+        {
         }
     }
 }
