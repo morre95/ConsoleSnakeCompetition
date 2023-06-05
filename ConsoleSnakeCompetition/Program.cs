@@ -53,6 +53,8 @@ namespace ConsoleSnakeCompetition
                     Console.Write('%');
 
                     path = AStarSearch(grid, currentX, currentY, goalX, goalY);
+
+                    snake.AddLength(4);
                 }
 
                 foreach (Cell cell in path)
@@ -363,6 +365,18 @@ namespace ConsoleSnakeCompetition
             {
                 snakePart.Draw();
             }
+        }
+
+        public void AddLength(int length)
+        {
+            var newHead = new SnakePart(new Point(Head.Position.X, Head.Position.Y), Symbol);
+            length = _body.Length + length;
+            _body = Enumerable
+             .Range(0, length)
+             .Select(x => newHead)
+             .ToArray();
+
+            Draw();
         }
 
         public void Move(int dx, int dy)
