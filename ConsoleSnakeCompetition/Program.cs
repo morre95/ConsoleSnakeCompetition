@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics;
+using System.Drawing;
 
 namespace ConsoleSnakeCompetition
 {
@@ -33,13 +34,22 @@ namespace ConsoleSnakeCompetition
             Snake snake = new Snake(new Point(startX, startY), 5);
             snake.Draw();
 
+            Snake computer = new Snake(new Point(startX, startY), 5, '^');
+            computer.Draw();
+
             int currentX = startX;
             int currentY = startY;
             Console.CursorVisible = false;
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             while (true)
             {
                 if (grid.GetValue(snake.GetX(), snake.GetY()) == '%')
                 {
+                    grid.SetValue(snake.GetX(), snake.GetY(), ' ');
+
                     Random rnd = new Random();
                     int goalX = rnd.Next(1, grid.RowCount() - 2);
                     int goalY = rnd.Next(1, grid.ColumnCount() - 2);
@@ -58,20 +68,45 @@ namespace ConsoleSnakeCompetition
                     snake.AddLength(4);
                 }
 
-                foreach (Cell cell in path)
+                if (stopwatch.ElapsedMilliseconds >= 100 && path.Count > 0)
                 {
+                    Cell cell = path[0];
+                    path.Remove(cell);
+
                     int deltaX = cell.X - currentX;
                     int deltaY = cell.Y - currentY;
 
-                    snake.Move(deltaX, deltaY);
+                    computer.Move(deltaX, deltaY);
 
                     currentX = cell.X;
                     currentY = cell.Y;
 
-                    Thread.Sleep(10);
+                    stopwatch.Restart();
+
+                    if (grid.GetValue(computer.GetX(), computer.GetY()) == '%')
+                    {
+                        grid.SetValue(computer.GetX(), computer.GetY(), ' ');
+
+                        Random rnd = new Random();
+                        int goalX = rnd.Next(1, grid.RowCount() - 2);
+                        int goalY = rnd.Next(1, grid.ColumnCount() - 2);
+                        while (grid.GetValue(goalX, goalY) == '*')
+                        {
+                            goalX = rnd.Next(1, grid.RowCount() - 2);
+                            goalY = rnd.Next(1, grid.ColumnCount() - 2);
+                        }
+                        grid.SetValue(goalX, goalY, '%');
+
+                        Console.SetCursorPosition(goalY, goalX);
+                        Console.Write('%');
+
+                        path = AStarSearch(grid, currentX, currentY, goalX, goalY);
+
+                        computer.AddLength(1);
+                    }
                 }
 
-                /*ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
                 if (keyInfo.Key == ConsoleKey.UpArrow && grid.GetValue(snake.GetX() - 1, snake.GetY()) != '*')
                 {
@@ -88,7 +123,7 @@ namespace ConsoleSnakeCompetition
                 else if (keyInfo.Key == ConsoleKey.RightArrow && grid.GetValue(snake.GetX(), snake.GetY() + 1) != '*')
                 {
                     snake.Move(Snake.Direction.Right);
-                }*/
+                }
             }
         }
 
