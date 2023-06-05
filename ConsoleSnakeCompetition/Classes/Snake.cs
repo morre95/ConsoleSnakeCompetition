@@ -1,0 +1,133 @@
+﻿using System.Drawing;
+
+namespace ConsoleSnakeCompetition.Classes
+{
+    public class Snake
+    {
+        public enum Direction
+        {
+            Up, Down, Left, Right
+        }
+
+        public char Symbol
+        {
+            get; set;
+        }
+
+        public Direction CurrentDirection
+        {
+            get; set;
+        }
+
+        private SnakePart[] _body;
+        private SnakePart Head => _body.First();
+        private SnakePart Tail => _body.Last();
+
+        public Snake(Point startingPoint, int length, char symbol = '#')
+        {
+            Symbol = symbol;
+
+            _body = Enumerable
+                .Range(0, length)
+                .Select(x => new SnakePart(startingPoint, symbol))
+                .ToArray();
+        }
+
+        public void Draw()
+        {
+            foreach (var snakePart in _body)
+            {
+                snakePart.Draw();
+            }
+        }
+
+        public void Erase()
+        {
+            foreach (var snakePart in _body)
+            {
+                snakePart.Erase();
+            }
+        }
+
+        public void AddLength(int length)
+        {
+            Erase();
+
+            var newHead = new SnakePart(new Point(Head.Position.X, Head.Position.Y), Symbol);
+            length = _body.Length + length;
+            _body = Enumerable
+             .Range(0, length)
+             .Select(x => newHead)
+             .ToArray();
+
+            Draw();
+        }
+
+        public void Move(int dx, int dy)
+        {
+            if (dx != 0)
+            {
+                CurrentDirection = dx > 0 ? Direction.Up : Direction.Down;
+            }
+            else if (dy != 0)
+            {
+                CurrentDirection = dy > 0 ? Direction.Left : Direction.Right;
+            }
+
+            var newHead = new SnakePart(new Point(Head.Position.X + dx, Head.Position.Y + dy), Symbol);
+
+            Tail.Erase();
+            for (var i = _body.Length - 1; i > 0; i--)
+            {
+                _body[i] = _body[i - 1];
+            }
+            _body[0] = newHead;
+            Draw();
+        }
+
+        public void Move(Direction direction)
+        {
+            SnakePart newHead = null;
+
+            switch (direction)
+            {
+                case Direction.Up:
+                    newHead = new SnakePart(new Point(Head.Position.X - 1, Head.Position.Y), Symbol);
+                    CurrentDirection = Direction.Up;
+                    break;
+                case Direction.Down:
+                    newHead = new SnakePart(new Point(Head.Position.X + 1, Head.Position.Y), Symbol);
+                    CurrentDirection = Direction.Down;
+                    break;
+                case Direction.Left:
+                    newHead = new SnakePart(new Point(Head.Position.X, Head.Position.Y - 1), Symbol);
+                    CurrentDirection = Direction.Left;
+                    break;
+                case Direction.Right:
+                    newHead = new SnakePart(new Point(Head.Position.X, Head.Position.Y + 1), Symbol);
+                    CurrentDirection = Direction.Right;
+                    break;
+            }
+
+            Tail.Erase();
+            for (var i = _body.Length - 1; i > 0; i--)
+            {
+                _body[i] = _body[i - 1];
+            }
+            _body[0] = newHead;
+            Draw();
+        }
+
+        public int GetX()
+        {
+            return Head.Position.X;
+        }
+
+        public int GetY()
+        {
+            return Head.Position.Y;
+        }
+    }
+}
+
+
