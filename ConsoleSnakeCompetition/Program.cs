@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
+using System.Text.Json;
 using ConsoleSnakeCompetition.Classes;
 
 namespace ConsoleSnakeCompetition
@@ -8,10 +9,19 @@ namespace ConsoleSnakeCompetition
     {
         static void Main(string[] args)
         {
-            int rows = 20, cols = 80;
-            Grid<char> grid = PopulateEmptyGrid(rows, cols);
+            //int rows = 20, cols = 80;
+            //Grid<char> grid = PopulateEmptyGrid(rows, cols);
+            Grid<char> grid = LoadFromFile(@"grids\bigTest.json");
 
-            grid.SetValue(18, 78, '%');
+            Random rnd = new Random();
+            int goalX = rnd.Next(1, grid.RowCount() - 2);
+            int goalY = rnd.Next(1, grid.ColumnCount() - 2);
+            while (grid.GetValue(goalX, goalY) == '*')
+            {
+                goalX = rnd.Next(1, grid.RowCount() - 2);
+                goalY = rnd.Next(1, grid.ColumnCount() - 2);
+            }
+            grid.SetValue(goalX, goalY, '%');
 
             string toPrint = "";
             for (int row = 0; row < grid.RowCount(); row++)
@@ -30,7 +40,7 @@ namespace ConsoleSnakeCompetition
             int startX = 1;
             int startY = 1;
 
-            List<Cell> path = AStarSearch(grid, startX, startY, goalXY[0], goalXY[1]);
+            Stack<Cell> path = AStarSearch(grid, startX, startY, goalXY[0], goalXY[1]);
                 
             Snake snake = new Snake(new Point(startX, startY), 5);
             snake.Draw();
@@ -51,9 +61,8 @@ namespace ConsoleSnakeCompetition
                 {
                     grid.SetValue(snake.GetX(), snake.GetY(), ' ');
 
-                    Random rnd = new Random();
-                    int goalX = rnd.Next(1, grid.RowCount() - 2);
-                    int goalY = rnd.Next(1, grid.ColumnCount() - 2);
+                    goalX = rnd.Next(1, grid.RowCount() - 2);
+                    goalY = rnd.Next(1, grid.ColumnCount() - 2);
                     while (grid.GetValue(goalX, goalY) == '*')
                     {
                         goalX = rnd.Next(1, grid.RowCount() - 2);
@@ -69,10 +78,9 @@ namespace ConsoleSnakeCompetition
                     snake.AddLength(4);
                 }
 
-                if (stopwatch.ElapsedMilliseconds >= 100 && path.Count > 0)
+                if (stopwatch.ElapsedMilliseconds >= 100 && path.Any())
                 {
-                    Cell cell = path[0];
-                    path.Remove(cell);
+                    Cell cell = path.Pop();
 
                     int deltaX = cell.X - currentX;
                     int deltaY = cell.Y - currentY;
@@ -88,9 +96,8 @@ namespace ConsoleSnakeCompetition
                     {
                         grid.SetValue(computer.GetX(), computer.GetY(), ' ');
 
-                        Random rnd = new Random();
-                        int goalX = rnd.Next(1, grid.RowCount() - 2);
-                        int goalY = rnd.Next(1, grid.ColumnCount() - 2);
+                        goalX = rnd.Next(1, grid.RowCount() - 2);
+                        goalY = rnd.Next(1, grid.ColumnCount() - 2);
                         while (grid.GetValue(goalX, goalY) == '*')
                         {
                             goalX = rnd.Next(1, grid.RowCount() - 2);
@@ -131,7 +138,7 @@ namespace ConsoleSnakeCompetition
             }
         }
 
-        public static List<Cell> AStarSearch(Grid<char> grid, int startX, int startY, int goalX, int goalY)
+        public static Stack<Cell> AStarSearch(Grid<char> grid, int startX, int startY, int goalX, int goalY)
         {
             int gridRows = grid.RowCount();
             int gridColumns = grid.ColumnCount();
@@ -163,24 +170,21 @@ namespace ConsoleSnakeCompetition
                 // Om målet är nått, returnera vägen
                 if (current.Equals(goal))
                 {
-                    List<Cell> path = new List<Cell>();
+                    Stack<Cell> path = new Stack<Cell>();
                     while (current != null)
                     {
                         if (path.Contains(current))
                         {
                             Console.WriteLine("Circular reference detected. Unable to find path.");
-                            return new List<Cell>();
+                            return new Stack<Cell>();
                         }
 
-                        path.Add(current);
+                        path.Push(current);
                         current = current.Parent;
                     }
 
                     //Console.WriteLine($"The Goal is found at: x = {path[0].X}, y = {path[0].Y}");
                     //Thread.Sleep(4000);
-
-
-                    path.Reverse();
 
                     return path;
                 }
@@ -218,7 +222,7 @@ namespace ConsoleSnakeCompetition
             }
 
             // Ingen väg hittades
-            return new List<Cell>();
+            return new Stack<Cell>();
         }
 
         public static bool CellInList(int x, int y, List<Cell> list)
@@ -254,6 +258,24 @@ namespace ConsoleSnakeCompetition
             }
 
             return new int[] { 1, 1 };
+        }
+
+        public static Grid<char> LoadFromFile(string fileName)
+        {
+            string jsonString = File.ReadAllText(fileName);
+
+            List<List<string>> gridList = JsonSerializer.Deserialize<List<List<string>>>(jsonString)!;
+
+            Grid<char> grid = new CharGrid(gridList.Count, gridList[0].Count);
+            for (int row = 0; row < gridList.Count; row++)
+            {
+                for (int col = 0; col < gridList[row].Count; col++)
+                {
+                    grid.SetValue(row, col, char.Parse(gridList[row][col]));
+                }
+            }
+
+            return grid;
         }
 
 
