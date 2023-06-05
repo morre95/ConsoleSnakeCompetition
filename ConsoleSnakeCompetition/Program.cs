@@ -23,17 +23,7 @@ namespace ConsoleSnakeCompetition
             }
             grid.SetValue(goalX, goalY, '%');
 
-            string toPrint = "";
-            for (int row = 0; row < grid.RowCount(); row++)
-            {
-                for (int col = 0; col < grid.ColumnCount(); col++)
-                {
-                    toPrint += grid.GetValue(row, col);
-                }
-                toPrint += "\n";
-            }
-
-            Console.WriteLine(toPrint);
+            DrawGrid(grid);
 
             int[] goalXY = FindPos(grid, '%');
 
@@ -136,6 +126,21 @@ namespace ConsoleSnakeCompetition
                     }
                 } 
             }
+        }
+
+        private static void DrawGrid(Grid<char> grid)
+        {
+            string toPrint = "";
+            for (int row = 0; row < grid.RowCount(); row++)
+            {
+                for (int col = 0; col < grid.ColumnCount(); col++)
+                {
+                    toPrint += grid.GetValue(row, col);
+                }
+                toPrint += "\n";
+            }
+
+            Console.WriteLine(toPrint);
         }
 
         public static Stack<Cell> AStarSearch(Grid<char> grid, int startX, int startY, int goalX, int goalY)
