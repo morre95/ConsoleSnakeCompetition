@@ -65,7 +65,7 @@ namespace ConsoleSnakeCompetition
 
                     path = AStarSearch(grid, currentX, currentY, goalX, goalY);
 
-                    snake.AddLength(4);
+                    snake.AddLength(1);
                 }
 
                 if (stopwatch.ElapsedMilliseconds >= 100 && path.Any())

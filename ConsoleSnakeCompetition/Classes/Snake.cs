@@ -59,12 +59,13 @@ namespace ConsoleSnakeCompetition.Classes
         {
             Erase();
 
-            var newHead = new SnakePart(new Point(Head.Position.X, Head.Position.Y), _body[_body.Length - 1].CurrentDirection, BodyTailSymbols[(int)_body[_body.Length - 1].CurrentDirection]);
-            length = _body.Length + length;
-            _body = Enumerable
-             .Range(0, length)
-             .Select(x => newHead)
-             .ToArray();
+            SnakePart newTail = new SnakePart(new Point(Tail.Position.X, Tail.Position.Y), _body[_body.Length - 1].CurrentDirection, BodyTailSymbols[(int)_body[_body.Length - 1].CurrentDirection]);
+
+            Array.Resize(ref _body, _body.Length + length);
+            for (var i = 1; i <= length; i++)
+            {
+                _body[_body.Length - i] = newTail;
+            }
 
             Draw();
         }
