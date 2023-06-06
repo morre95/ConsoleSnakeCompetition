@@ -214,7 +214,7 @@ namespace ConsoleSnakeCompetition
         static void Main(string[] args)
         {
 
-            Output.WriteLine(ConsoleColor.Red, "sdfgh");
+            /*Output.WriteLine(ConsoleColor.Red, "sdfgh");
             Output.WriteLine(ConsoleColor.Red, '#');
             Output.WriteLine(ConsoleColor.Red, 12);
             Output.WriteLine(ConsoleColor.Red, null);
@@ -229,14 +229,14 @@ namespace ConsoleSnakeCompetition
             Output.Write(ConsoleColor.Red, null);
             Output.Write(ConsoleColor.Red, false);
             Output.Write(ConsoleColor.Red, 12.55);
-            Output.Write(ConsoleColor.Red, 22.5f);
+            Output.Write(ConsoleColor.Red, 22.5f);*/
 
-            /*Logger<AppSettings>.Instance.Warn("Värdet måste varnas");
+            Logger<AppSettings>.Instance.Warn("Värdet måste varnas");
             Logger<AppSettings>.Instance.Error("Error");
             Logger<Snake>.Instance.Trace("Trace the snake");
             Logger<Menu>.Instance.Debug("Nu debuggar vi menu");
             Logger<AppSettings>.Instance.Success("Yes det funkade");
-            return;*/
+            return;
 
             AppSettings.Instance.LoadSettings();
 
