@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
 
 
-namespace ConsoleSnakeCompetition.Classes
+namespace ConsoleSnakeCompetition.Utilities
 {
     public class AppSettings
     {

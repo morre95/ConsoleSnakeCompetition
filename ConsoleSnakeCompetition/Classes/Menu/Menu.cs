@@ -1,4 +1,6 @@
-﻿namespace ConsoleSnakeCompetition.Classes
+﻿using ConsoleSnakeCompetition.Utilities;
+
+namespace ConsoleSnakeCompetition.Classes.Menu
 {
     public class Menu
     {

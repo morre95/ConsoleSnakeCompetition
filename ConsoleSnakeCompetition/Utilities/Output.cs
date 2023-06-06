@@ -1,4 +1,4 @@
-﻿namespace ConsoleSnakeCompetition.Classes
+﻿namespace ConsoleSnakeCompetition.Utilities
 {
     public static class Output
     {

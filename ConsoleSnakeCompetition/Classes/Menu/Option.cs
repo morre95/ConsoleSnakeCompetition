@@ -1,4 +1,4 @@
-﻿namespace ConsoleSnakeCompetition.Classes
+﻿namespace ConsoleSnakeCompetition.Classes.Menu
 {
     public class Option
     {

@@ -1,4 +1,4 @@
-﻿namespace ConsoleSnakeCompetition.Classes
+﻿namespace ConsoleSnakeCompetition.Classes.Game
 {
     public class CharGrid : Grid<char>
     {

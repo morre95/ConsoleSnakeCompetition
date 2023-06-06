@@ -1,7 +1,8 @@
 ﻿using System.Drawing;
-using static ConsoleSnakeCompetition.Classes.Snake;
+using ConsoleSnakeCompetition.Utilities;
+using static ConsoleSnakeCompetition.Classes.Snake.Snake;
 
-namespace ConsoleSnakeCompetition.Classes
+namespace ConsoleSnakeCompetition.Classes.Snake
 {
     public class SnakePart
     {
@@ -52,7 +53,7 @@ namespace ConsoleSnakeCompetition.Classes
 
         private int _GetColorIndex()
         {
-            int i = Array.IndexOf(Colors, Color);
+            var i = Array.IndexOf(Colors, Color);
             if (i == -1) i = 0;
             return i;
         }

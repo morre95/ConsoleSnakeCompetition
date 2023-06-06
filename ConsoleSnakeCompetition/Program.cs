@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
 using System.Text.Json;
-using ConsoleSnakeCompetition.Classes;
-
+using ConsoleSnakeCompetition.Classes.Game;
+using ConsoleSnakeCompetition.Classes.Menu;
+using ConsoleSnakeCompetition.Classes.Snake;
+using ConsoleSnakeCompetition.Utilities;
 
 namespace ConsoleSnakeCompetition
 {

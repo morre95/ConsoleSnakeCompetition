@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace ConsoleSnakeCompetition.Classes
+namespace ConsoleSnakeCompetition.Classes.Snake
 {
     public class Snake
     {
@@ -59,7 +59,7 @@ namespace ConsoleSnakeCompetition.Classes
         {
             Erase();
 
-            SnakePart newTail = new SnakePart(new Point(Tail.Position.X, Tail.Position.Y), _body[_body.Length - 1].CurrentDirection, BodyTailSymbols[(int)_body[_body.Length - 1].CurrentDirection]);
+            var newTail = new SnakePart(new Point(Tail.Position.X, Tail.Position.Y), _body[_body.Length - 1].CurrentDirection, BodyTailSymbols[(int)_body[_body.Length - 1].CurrentDirection]);
 
             Array.Resize(ref _body, _body.Length + length);
             for (var i = 1; i <= length; i++)
