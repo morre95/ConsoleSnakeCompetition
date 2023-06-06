@@ -41,6 +41,11 @@ namespace ConsoleSnakeCompetition
             Repository.Add(score); 
         }
 
+        public void AddRange(params PlayerScore[] scores)
+        {
+            Repository.AddRange(scores);
+        }
+
         public List<PlayerScore> GetLeaderboard()
         {
             return Repository.OrderBy(x => x.Score).ToList();
@@ -193,14 +198,14 @@ namespace ConsoleSnakeCompetition
         static void Main(string[] args)
         {
 
-            ScoreBoard score = new ScoreBoard(
+            /*ScoreBoard score = new ScoreBoard(
                 new PlayerScore("Kalle", 113, DateTime.Now),
                 new PlayerScore("Foo", 99, DateTime.Parse("2023-02-05 12:22:11")),
                 new PlayerScore("Bar", 458, DateTime.Parse("1975-02-05 22:22:22"))
                 );
 
             Console.WriteLine(score.ToString());
-            return;
+            return;*/
 
             /*Logger<AppSettings>.Instance.Warn("Värdet måste varnas");
             Logger<AppSettings>.Instance.Error("Error");
