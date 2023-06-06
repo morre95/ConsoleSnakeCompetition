@@ -16,8 +16,6 @@ namespace ConsoleSnakeCompetition
 
             AppSettings.Instance.LoadSettings();
 
-            Console.CursorVisible = false;
-
             InitGame();
         }
 
@@ -48,8 +46,9 @@ namespace ConsoleSnakeCompetition
         private static void SetSpeed()
         {
             int stepCount = AppSettings.Instance.StepSpeedCount;
-
             int selectedValue = AppSettings.Instance.Speed;
+
+            Console.CursorVisible = false;
             while (true)
             {
                 Console.Clear();
@@ -111,6 +110,8 @@ namespace ConsoleSnakeCompetition
 
             int score = 0;
             int computerScore = 0;
+
+            Console.CursorVisible = false;
 
             while (true)
             {
@@ -210,6 +211,14 @@ namespace ConsoleSnakeCompetition
                 Console.WriteLine("You loose");
                 Console.WriteLine($"Score: (you/computer) {score}/{computerScore}");
             }
+
+            WaitTermination();
+        }
+
+        static void WaitTermination()
+        {
+            Console.Write("Press any key to terminate ...");
+            Console.ReadKey();
         }
 
         private static void DrawGrid(Grid<char> grid)

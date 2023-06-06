@@ -33,23 +33,28 @@ namespace ConsoleSnakeCompetition.Utilities
         {
             if (File.Exists("settings.xml"))
             {
-                using (var reader = new StreamReader("settings.xml"))
+                using (StreamReader reader = new StreamReader("settings.xml"))
                 {
-                    var serializer = new XmlSerializer(typeof(AppSettings));
-                    var loadedSettings = (AppSettings)serializer.Deserialize(reader);
-                    Speed = loadedSettings.Speed;
-                    ThemeColor = loadedSettings.ThemeColor;
+                    XmlSerializer serializer = new XmlSerializer(typeof(AppSettings));
+                    AppSettings loadedSettings = (AppSettings)serializer.Deserialize(reader);
+                    CopyProperties(loadedSettings);
                 }
             }
         }
 
         public void SaveSettings()
         {
-            using (var writer = new StreamWriter("settings.xml"))
+            using (StreamWriter writer = new StreamWriter("settings.xml"))
             {
-                var serializer = new XmlSerializer(typeof(AppSettings));
+                XmlSerializer serializer = new XmlSerializer(typeof(AppSettings));
                 serializer.Serialize(writer, this);
             }
+        }
+
+        private void CopyProperties(AppSettings other)
+        {
+            Speed = other.Speed;
+            ThemeColor = other.ThemeColor;
         }
     }
 }
