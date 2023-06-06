@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
 using ConsoleSnakeCompetition.Classes;
 
 
