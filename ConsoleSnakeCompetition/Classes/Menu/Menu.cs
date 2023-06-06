@@ -45,29 +45,22 @@ namespace ConsoleSnakeCompetition.Classes.Menu
                 switch (key)
                 {
                     case ConsoleKey.LeftArrow:
-                        {
-                            if (choice % optionsPerLine > 0)
-                                choice--;
-                            break;
-                        }
+                        if (choice % optionsPerLine > 0)
+                            choice--;
+                        break;
                     case ConsoleKey.RightArrow:
-                        {
-                            if (choice % optionsPerLine < optionsPerLine - 1)
-                                choice++;
-                            break;
-                        }
+                        if (choice % optionsPerLine < optionsPerLine - 1)
+                            choice++;
+                        break;
                     case ConsoleKey.UpArrow:
-                        {
-                            if (choice >= optionsPerLine)
-                                choice -= optionsPerLine;
-                            break;
-                        }
+                        if (choice >= optionsPerLine)
+                            choice -= optionsPerLine;
+                        break;
                     case ConsoleKey.DownArrow:
-                        {
-                            if (choice + optionsPerLine < Options.Count)
-                                choice += optionsPerLine;
-                            break;
-                        }
+                        if (choice + optionsPerLine < Options.Count)
+                            choice += optionsPerLine;
+                        break;
+                        
                 }
             } while (key != ConsoleKey.Enter);
 
@@ -91,7 +84,6 @@ namespace ConsoleSnakeCompetition.Classes.Menu
 
         private void WriteMenu(int choice)
         {
-            //Console.Clear();
             for (var i = 0; i < Options.Count; i++)
             {
                 Console.SetCursorPosition(startX + i % optionsPerLine * spacingPerLine, startY + i / optionsPerLine);

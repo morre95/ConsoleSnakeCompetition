@@ -1,213 +1,14 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
-using System.Text;
 using System.Text.Json;
 using ConsoleSnakeCompetition.Classes.Game;
 using ConsoleSnakeCompetition.Classes.Menu;
+using ConsoleSnakeCompetition.Classes.Player;
 using ConsoleSnakeCompetition.Classes.Snake;
 using ConsoleSnakeCompetition.Utilities;
 
 namespace ConsoleSnakeCompetition
 {
-
-    public class PlayerScore
-    {
-        public string PlayerName { get; set; } = "";
-        public int Score { get; set; }
-
-        public DateTime Date { get; set; }
-
-        public PlayerScore(string name, int score, DateTime when)
-        {
-            PlayerName = name;
-            Score = score;
-            Date = when;
-        }
-    }
-
-    public abstract class ScoreBoard
-    {
-        public List<PlayerScore> Repository { get; private set; } = new();
-
-        private readonly string ScoreBoardPath = Path.GetFullPath("Resources/Scores/");
-
-        public ScoreBoard(params PlayerScore[] scores)
-        {
-            Repository = new List<PlayerScore>(scores);
-        }
-
-        public virtual void Add(PlayerScore score)
-        {
-            Repository.Add(score); 
-        }
-
-        public virtual void AddRange(params PlayerScore[] scores)
-        {
-            Repository.AddRange(scores);
-        }
-
-        public virtual List<PlayerScore> GetLeaderboardAsc()
-        {
-            return Repository.OrderBy(x => x.Score).ToList();
-        }
-        
-        public virtual List<PlayerScore> GetLeaderboard()
-        {
-            return Repository.OrderByDescending(x => x.Score).ToList();
-        }
-
-        public virtual void Save()
-        {
-            string fileName = "scores.json";
-            SaveToFile(ScoreBoardPath + fileName);
-        }
-
-        public virtual void SaveToFile(string fileName)
-        {
-            string jsonString = JsonSerializer.Serialize(Repository);
-            File.WriteAllText(fileName, jsonString);
-        }
-
-        public virtual void LoadFromFile(string fileName)
-        {
-            string jsonString = File.ReadAllText(fileName);
-            Repository = JsonSerializer.Deserialize<List<PlayerScore>>(jsonString)!;
-        }
-
-        public override string ToString()
-        {
-            TableBuilder tb = new TableBuilder();
-            tb.AddRow("#", "Name", "Score", "When");
-            tb.AddRow("--", "----", "-----", "-----------");
-            int i = 1;
-            foreach (PlayerScore score in GetLeaderboard())
-            {
-                tb.AddRow(i++, score.PlayerName, score.Score.ToString(), score.Date.ToString("yyyy-MM-dd HH:mm:ss"));
-            }
-            return tb.Output();
-        }
-    }
-
-    public class TopScoreBoard : ScoreBoard
-    {
-        public int NumberOf { get; set; }
-        public TopScoreBoard(params PlayerScore[] scores) : base(scores)
-        {
-            NumberOf = 10;
-        }
-
-        public override List<PlayerScore> GetLeaderboard()
-        {
-            return Repository.OrderByDescending(x => x.Score).Take(NumberOf).ToList();
-        }
-
-    }
-
-
-
-    public interface ITextRow
-    {
-        string Output();
-        void Output(StringBuilder sb);
-        object Tag
-        {
-            get; set;
-        }
-    }
-
-    public class TableBuilder
-    {
-        protected class TextRow : List<string>, ITextRow
-        {
-            protected TableBuilder owner = null;
-            public TextRow(TableBuilder Owner)
-            {
-                owner = Owner;
-                if (owner == null) throw new ArgumentException("Owner");
-            }
-            public string Output()
-            {
-                StringBuilder sb = new StringBuilder();
-                Output(sb);
-                return sb.ToString();
-            }
-            public void Output(StringBuilder sb)
-            {
-                sb.AppendFormat(owner.FormatString, this.ToArray());
-            }
-            public object Tag
-            {
-                get; set;
-            }
-        }
-
-        public string Separator
-        {
-            get; set;
-        }
-
-        protected List<ITextRow> rows = new List<ITextRow>();
-        protected List<int> colLength = new List<int>();
-
-        public TableBuilder()
-        {
-            Separator = "  ";
-        }
-
-        public ITextRow AddRow(params object[] cols)
-        {
-            TextRow row = new TextRow(this);
-            foreach (object o in cols)
-            {
-                string str = o.ToString().Trim();
-                row.Add(str);
-                if (colLength.Count >= row.Count)
-                {
-                    int curLength = colLength[row.Count - 1];
-                    if (str.Length > curLength) colLength[row.Count - 1] = str.Length;
-                }
-                else
-                {
-                    colLength.Add(str.Length);
-                }
-            }
-            rows.Add(row);
-            return row;
-        }
-
-        protected string _fmtString = null;
-        public string FormatString
-        {
-            get
-            {
-                if (_fmtString == null)
-                {
-                    string format = "";
-                    int i = 0;
-                    foreach (int len in colLength)
-                    {
-                        format += string.Format("{{{0},-{1}}}{2}", i++, len, Separator);
-                    }
-                    format += "\r\n";
-                    _fmtString = format;
-                }
-                return _fmtString;
-            }
-        }
-
-        public string Output()
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (TextRow row in rows)
-            {
-                row.Output(sb);
-            }
-            return sb.ToString();
-        }
-    }
-
-
-
     internal class Program
     {
 
@@ -266,6 +67,9 @@ namespace ConsoleSnakeCompetition
 
             menu.Display();
 
+            Console.Clear();
+            Grid<char> grid = SelectGrid();
+
             for (int i = 3; i > 0; i--)
             {
                 Console.Clear();
@@ -278,7 +82,8 @@ namespace ConsoleSnakeCompetition
             Thread.Sleep(600);
             Console.Clear();
 
-            Run(AppSettings.Instance.GetDelayMS());
+
+            Run(grid, AppSettings.Instance.GetDelayMS());
         }
 
         private static void NotImplementedException()
@@ -339,13 +144,8 @@ namespace ConsoleSnakeCompetition
 
         private static readonly string gridsPath = Path.GetFullPath(@"Resources\Grids\");
 
-        static void Run(int delayMS)
+        static void Run(Grid<char> grid, int delayMS)
         {
-            //int rows = 20, cols = 80;
-            //Grid<char> grid = PopulateEmptyGrid(rows, cols);
-            string fileName = "bigTest.json";
-            Grid<char> grid = LoadFromFile(fileName);
-
             DrawGrid(grid);
 
             int goalX, goalY;
@@ -474,6 +274,61 @@ namespace ConsoleSnakeCompetition
 
             WaitTermination();
             InitGame();
+        }
+
+        private static Grid<char> SelectGrid()
+        {
+            string[] files = Directory.GetFiles(gridsPath, "*.json");
+            Grid<char> grid = new CharGrid(0, 0);
+
+            if (files.Length == 1)
+            {
+                grid = LoadFromFile(Path.GetFileName(files[0]));
+            }
+            else if (files.Length > 1)
+            {
+                var choice = 0;
+                ConsoleKey key;
+                do
+                {
+                    for (var i = 0; i < files.Length; i++)
+                    {
+                        Console.SetCursorPosition(0, i);
+
+                        if (i == choice)
+                        {
+                            Output.Write(ConsoleColor.Red, Path.GetFileName(files[i]));
+                        }
+                        else
+                        {
+                            Console.Write(Path.GetFileName(files[i]));
+                        }
+                    }
+
+                    key = Console.ReadKey(true).Key;
+
+                    switch (key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            if (choice > 0) choice--;
+                            break;
+                        case ConsoleKey.DownArrow:
+                            if (choice < files.Length - 1) choice++;
+                            break;
+                    }
+
+                } while (key != ConsoleKey.Enter);
+
+                grid = LoadFromFile(Path.GetFileName(files[choice]));
+            }
+            else
+            {
+                var cols = Console.WindowWidth;
+                var rows = Console.WindowHeight;
+                grid = PopulateEmptyGrid(rows - 2, cols - 2);
+            }
+
+            return grid;
         }
 
         static void WaitTermination()
