@@ -8,6 +8,16 @@ using ConsoleSnakeCompetition.Utilities;
 
 namespace ConsoleSnakeCompetition
 {
+
+    public class PlayerScore
+    {
+        public int PlayerId { get; set; }
+
+        public string PlayerName { get; set; } = "";
+        public int Score { get; set; }
+
+    }
+
     internal class Program
     {
 
@@ -137,25 +147,21 @@ namespace ConsoleSnakeCompetition
                         case ConsoleKey.UpArrow:
                             if (grid.GetValue(snake.GetX() - 1, snake.GetY()) != '*')
                                 snake.Move(Snake.Direction.Up);
-                            //snake.Move(-1, 0);
                             break;
                         case ConsoleKey.S:
                         case ConsoleKey.DownArrow:
                             if (grid.GetValue(snake.GetX() + 1, snake.GetY()) != '*')
                                 snake.Move(Snake.Direction.Down);
-                            //snake.Move(1, 0);
                             break;
                         case ConsoleKey.A:
                         case ConsoleKey.LeftArrow:
                             if (grid.GetValue(snake.GetX(), snake.GetY() - 1) != '*')
                                 snake.Move(Snake.Direction.Left);
-                            //snake.Move(0, -1);
                             break;
                         case ConsoleKey.D:
                         case ConsoleKey.RightArrow:
                             if (grid.GetValue(snake.GetX(), snake.GetY() + 1) != '*')
                                 snake.Move(Snake.Direction.Right);
-                            //snake.Move(0, 1);
                             break;
                     }
 

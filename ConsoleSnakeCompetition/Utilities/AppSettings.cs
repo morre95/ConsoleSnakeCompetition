@@ -3,7 +3,7 @@
 
 namespace ConsoleSnakeCompetition.Utilities
 {
-    public class AppSettings
+    public class AppSettings : ISettings
     {
         private static readonly Lazy<AppSettings> instance = new Lazy<AppSettings>(() => new AppSettings());
 
