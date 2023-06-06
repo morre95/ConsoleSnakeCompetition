@@ -33,7 +33,7 @@ namespace ConsoleSnakeCompetition
             Output.Write(ConsoleColor.Red, 12.55);
             Output.Write(ConsoleColor.Red, 22.5f);*/
 
-            /*Logger<AppSettings>.Instance.Warn("Värdet måste varnas");
+            Logger<AppSettings>.Instance.Warn("Värdet måste varnas");
             Logger<AppSettings>.Instance.Error("Error");
             Logger<Snake>.Instance.Trace("Trace the snake");
             Logger<Menu>.Instance.Debug("Nu debuggar vi menu");
@@ -41,7 +41,8 @@ namespace ConsoleSnakeCompetition
 
             Log.Error("Error");
             Log.Debug("Debug", "Foo", "Bar", 1, 2, 'E');
-            return;*/
+            Log.Test("Debug");
+            return;
 
             AppSettings.Instance.LoadSettings();
 
