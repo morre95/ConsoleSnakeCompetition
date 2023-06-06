@@ -14,6 +14,13 @@ namespace ConsoleSnakeCompetition
         static void Main(string[] args)
         {
 
+            /*Logger<AppSettings>.Instance.Warn("Värdet måste varnas");
+            Logger<AppSettings>.Instance.Error("Error");
+            Logger<Snake>.Instance.Trace("Trace the snake");
+            Logger<Menu>.Instance.Debug("Nu debuggar vi menu");
+            Logger<AppSettings>.Instance.Success("Yes det funkade");
+            return;*/
+
             AppSettings.Instance.LoadSettings();
 
             InitGame();
@@ -76,11 +83,14 @@ namespace ConsoleSnakeCompetition
             InitGame();
         }
 
+        private static readonly string gridsPath = Path.GetFullPath(@"Resources\Grids\");
+
         static void Run(int delayMS)
         {
             //int rows = 20, cols = 80;
             //Grid<char> grid = PopulateEmptyGrid(rows, cols);
-            Grid<char> grid = LoadFromFile(@"grids\bigTest.json");
+            string fileName = "bigTest.json";
+            Grid<char> grid = LoadFromFile(fileName);
 
             DrawGrid(grid);
 
@@ -379,7 +389,7 @@ namespace ConsoleSnakeCompetition
 
         public static Grid<char> LoadFromFile(string fileName)
         {
-            string jsonString = File.ReadAllText(fileName);
+            string jsonString = File.ReadAllText(gridsPath + fileName);
 
             List<List<string>> gridList = JsonSerializer.Deserialize<List<List<string>>>(jsonString)!;
 
@@ -416,9 +426,7 @@ namespace ConsoleSnakeCompetition
             }
 
             return gridList;
-        }
-
-        
+        }  
     }
 }
 

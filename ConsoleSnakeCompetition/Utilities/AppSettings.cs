@@ -9,6 +9,8 @@ namespace ConsoleSnakeCompetition.Utilities
 
         public static AppSettings Instance => instance.Value;
 
+        private readonly string settingsFile = Path.GetFullPath("Resources/Settings/settings.xml");
+
         public string GameName { get; set; } = "The Best Game";
 
         public int Speed { get; set; } = 1;
@@ -31,9 +33,9 @@ namespace ConsoleSnakeCompetition.Utilities
 
         public void LoadSettings()
         {
-            if (File.Exists("settings.xml"))
+            if (File.Exists(settingsFile))
             {
-                using (StreamReader reader = new StreamReader("settings.xml"))
+                using (StreamReader reader = new StreamReader(settingsFile))
                 {
                     XmlSerializer serializer = new XmlSerializer(typeof(AppSettings));
                     AppSettings loadedSettings = (AppSettings)serializer.Deserialize(reader);
@@ -44,7 +46,7 @@ namespace ConsoleSnakeCompetition.Utilities
 
         public void SaveSettings()
         {
-            using (StreamWriter writer = new StreamWriter("settings.xml"))
+            using (StreamWriter writer = new StreamWriter(settingsFile))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(AppSettings));
                 serializer.Serialize(writer, this);
