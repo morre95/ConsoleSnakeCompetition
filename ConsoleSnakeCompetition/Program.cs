@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
+using System.Text;
 using System.Text.Json;
 using ConsoleSnakeCompetition.Classes.Game;
 using ConsoleSnakeCompetition.Classes.Menu;
@@ -11,18 +12,195 @@ namespace ConsoleSnakeCompetition
 
     public class PlayerScore
     {
-        public int PlayerId { get; set; }
-
         public string PlayerName { get; set; } = "";
         public int Score { get; set; }
 
+        public DateTime Date { get; set; }
+
+        public PlayerScore(string name, int score, DateTime when)
+        {
+            PlayerName = name;
+            Score = score;
+            Date = when;
+        }
     }
+
+    public class ScoreBoard
+    {
+        public List<PlayerScore> Repository { get; private set; } = new();
+
+        private readonly string ScoreBoardPath = Path.GetFullPath("Resources/Scores/");
+
+        public ScoreBoard(params PlayerScore[] scores)
+        {
+            Repository = new List<PlayerScore>(scores);
+        }
+
+        public void Add(PlayerScore score)
+        {
+            Repository.Add(score); 
+        }
+
+        public List<PlayerScore> GetLeaderboard()
+        {
+            return Repository.OrderBy(x => x.Score).ToList();
+        }
+        
+        public List<PlayerScore> GetLeaderboardDesc()
+        {
+            return Repository.OrderByDescending(x => x.Score).ToList();
+        }
+
+        public void Save()
+        {
+            string fileName = "scores.json";
+            SaveToFile(ScoreBoardPath + fileName);
+        }
+
+        public void SaveToFile(string fileName)
+        {
+            string jsonString = JsonSerializer.Serialize(Repository);
+            File.WriteAllText(fileName, jsonString);
+        }
+
+        public void LoadFromFile(string fileName)
+        {
+            string jsonString = File.ReadAllText(fileName);
+            Repository = JsonSerializer.Deserialize<List<PlayerScore>>(jsonString)!;
+        }
+
+        public override string ToString()
+        {
+            TableBuilder tb = new TableBuilder();
+            tb.AddRow("Name", "Score", "When");
+            tb.AddRow("----", "----", "-----------");
+            foreach (PlayerScore score in Repository)
+            {
+                tb.AddRow(score.PlayerName, score.Score.ToString(), score.Date.ToString("yyyy-MM-dd HH:mm:ss"));
+            }
+            return tb.Output();
+        }
+    }
+
+
+
+    public interface ITextRow
+    {
+        string Output();
+        void Output(StringBuilder sb);
+        object Tag
+        {
+            get; set;
+        }
+    }
+
+    public class TableBuilder
+    {
+        protected class TextRow : List<string>, ITextRow
+        {
+            protected TableBuilder owner = null;
+            public TextRow(TableBuilder Owner)
+            {
+                owner = Owner;
+                if (owner == null) throw new ArgumentException("Owner");
+            }
+            public string Output()
+            {
+                StringBuilder sb = new StringBuilder();
+                Output(sb);
+                return sb.ToString();
+            }
+            public void Output(StringBuilder sb)
+            {
+                sb.AppendFormat(owner.FormatString, this.ToArray());
+            }
+            public object Tag
+            {
+                get; set;
+            }
+        }
+
+        public string Separator
+        {
+            get; set;
+        }
+
+        protected List<ITextRow> rows = new List<ITextRow>();
+        protected List<int> colLength = new List<int>();
+
+        public TableBuilder()
+        {
+            Separator = "  ";
+        }
+
+        public ITextRow AddRow(params object[] cols)
+        {
+            TextRow row = new TextRow(this);
+            foreach (object o in cols)
+            {
+                string str = o.ToString().Trim();
+                row.Add(str);
+                if (colLength.Count >= row.Count)
+                {
+                    int curLength = colLength[row.Count - 1];
+                    if (str.Length > curLength) colLength[row.Count - 1] = str.Length;
+                }
+                else
+                {
+                    colLength.Add(str.Length);
+                }
+            }
+            rows.Add(row);
+            return row;
+        }
+
+        protected string _fmtString = null;
+        public string FormatString
+        {
+            get
+            {
+                if (_fmtString == null)
+                {
+                    string format = "";
+                    int i = 0;
+                    foreach (int len in colLength)
+                    {
+                        format += string.Format("{{{0},-{1}}}{2}", i++, len, Separator);
+                    }
+                    format += "\r\n";
+                    _fmtString = format;
+                }
+                return _fmtString;
+            }
+        }
+
+        public string Output()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (TextRow row in rows)
+            {
+                row.Output(sb);
+            }
+            return sb.ToString();
+        }
+    }
+
+
 
     internal class Program
     {
 
         static void Main(string[] args)
         {
+
+            ScoreBoard score = new ScoreBoard(
+                new PlayerScore("Kalle", 113, DateTime.Now),
+                new PlayerScore("Foo", 99, DateTime.Parse("2023-02-05 12:22:11")),
+                new PlayerScore("Bar", 458, DateTime.Parse("1975-02-05 22:22:22"))
+                );
+
+            Console.WriteLine(score.ToString());
+            return;
 
             /*Logger<AppSettings>.Instance.Warn("Värdet måste varnas");
             Logger<AppSettings>.Instance.Error("Error");
