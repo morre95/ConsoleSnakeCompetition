@@ -39,9 +39,8 @@ namespace ConsoleSnakeCompetition.Classes
         public void DrawColorized()
         {
             var i = _GetColorIndex();
-            Console.ForegroundColor = Colors[i];
-            Draw();
-            Console.ResetColor();
+            Console.SetCursorPosition(Position.Y, Position.X);
+            Output.Write(Colors[i], Symbol);
             _SetNewColor(++i);
         }
 

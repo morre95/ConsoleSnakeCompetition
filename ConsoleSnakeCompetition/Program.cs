@@ -9,69 +9,140 @@ namespace ConsoleSnakeCompetition
     {
         static void Main(string[] args)
         {
+            Console.CursorVisible = false;
+            int minValue = 50;
+            int maxValue = 400;
+            int stepCount = 20;
+
+            double scaleStep = (maxValue - minValue) / (double)(stepCount - 1);
+            int selectedValue = 1;
+            while (true)
+            {
+                Console.Clear();
+                Console.Write($"Speed: {selectedValue}");
+                var key = Console.ReadKey(true).Key;
+                if (key == ConsoleKey.UpArrow)
+                {
+                    selectedValue++;
+                    if (selectedValue > stepCount) { selectedValue = 1; }
+                }
+                else if (key == ConsoleKey.DownArrow)
+                {
+                    selectedValue--;
+                    if (selectedValue < 1) { selectedValue = stepCount; }
+                }
+                else if (key == ConsoleKey.Enter)
+                {
+                    break;
+                }
+            }
+
+            int speed = (int)(maxValue - (scaleStep * (selectedValue - 1)));
+
+            for (int i = 3; i > 0; i--)
+            {
+                Console.Clear();
+                Console.WriteLine($"Selected speed: {selectedValue}");
+                Console.WriteLine($"Ready? {new string('.', i)} ");
+                Thread.Sleep(850);
+            }
+            Console.Clear();
+            Console.WriteLine("GO!!!");
+            Thread.Sleep(600);
+            Console.Clear();
+            Run(speed);
+        }
+        static void Run(int speed)
+        {
             //int rows = 20, cols = 80;
             //Grid<char> grid = PopulateEmptyGrid(rows, cols);
             Grid<char> grid = LoadFromFile(@"grids\bigTest.json");
 
-            Random rnd = new Random();
-            int goalX = rnd.Next(1, grid.RowCount() - 2);
-            int goalY = rnd.Next(1, grid.ColumnCount() - 2);
-            while (grid.GetValue(goalX, goalY) == '*')
-            {
-                goalX = rnd.Next(1, grid.RowCount() - 2);
-                goalY = rnd.Next(1, grid.ColumnCount() - 2);
-            }
-            grid.SetValue(goalX, goalY, '%');
-
             DrawGrid(grid);
 
-            int[] goalXY = FindPos(grid, '%');
+            int goalX, goalY;
+            GenerateRandomXY(grid, out goalX, out goalY);
+            SetNewGoal(grid, goalX, goalY);
 
-            int startX = 1;
-            int startY = 1;
+            int startX, startY;
+            GenerateRandomXY(grid, out startX, out startY);
 
-            Stack<Cell> path = AStarSearch(grid, startX, startY, goalXY[0], goalXY[1]);
-                
             Snake snake = new Snake(new Point(startX, startY), 5, '#', true);
             snake.Draw();
 
-            Snake computer = new Snake(new Point(startX, startY), 5, '^');
-            computer.Draw();
+            int compStartX, compStartY;
+            GenerateRandomXY(grid, out compStartX, out compStartY);
 
-            int currentX = startX;
-            int currentY = startY;
-            Console.CursorVisible = false;
+            Snake computer = new Snake(new Point(compStartX, compStartY), 5, '?');
+            computer.Draw();
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
+            Stack<Cell> path = AStarSearch(grid, compStartX, compStartY, goalX, goalY);
+
+            int currentX = compStartX;
+            int currentY = compStartY;
+
+            int score = 0;
+            int computerScore = 0;
+
             while (true)
             {
-                if (grid.GetValue(snake.GetX(), snake.GetY()) == '%')
+
+                if (Console.KeyAvailable)
                 {
-                    grid.SetValue(snake.GetX(), snake.GetY(), ' ');
+                    var key = Console.ReadKey(true).Key;
+                    if (key == ConsoleKey.Q) break;
 
-                    goalX = rnd.Next(1, grid.RowCount() - 2);
-                    goalY = rnd.Next(1, grid.ColumnCount() - 2);
-                    while (grid.GetValue(goalX, goalY) == '*')
+                    switch (key)
                     {
-                        goalX = rnd.Next(1, grid.RowCount() - 2);
-                        goalY = rnd.Next(1, grid.ColumnCount() - 2);
+                        case ConsoleKey.W:
+                        case ConsoleKey.UpArrow:
+                            if (grid.GetValue(snake.GetX() - 1, snake.GetY()) != '*')
+                                snake.Move(Snake.Direction.Up);
+                            //snake.Move(-1, 0);
+                            break;
+                        case ConsoleKey.S:
+                        case ConsoleKey.DownArrow:
+                            if (grid.GetValue(snake.GetX() + 1, snake.GetY()) != '*')
+                                snake.Move(Snake.Direction.Down);
+                            //snake.Move(1, 0);
+                            break;
+                        case ConsoleKey.A:
+                        case ConsoleKey.LeftArrow:
+                            if (grid.GetValue(snake.GetX(), snake.GetY() - 1) != '*')
+                                snake.Move(Snake.Direction.Left);
+                            //snake.Move(0, -1);
+                            break;
+                        case ConsoleKey.D:
+                        case ConsoleKey.RightArrow:
+                            if (grid.GetValue(snake.GetX(), snake.GetY() + 1) != '*')
+                                snake.Move(Snake.Direction.Right);
+                            //snake.Move(0, 1);
+                            break;
                     }
-                    grid.SetValue(goalX, goalY, '%');
 
-                    Console.SetCursorPosition(goalY, goalX);
-                    Console.Write('%');
+                    if (grid.GetValue(snake.GetX(), snake.GetY()) == '%')
+                    {
+                        grid.SetValue(snake.GetX(), snake.GetY(), ' ');
 
-                    path = AStarSearch(grid, currentX, currentY, goalX, goalY);
+                        GenerateRandomXY(grid, out goalX, out goalY);
+                        SetNewGoal(grid, goalX, goalY);
 
-                    snake.AddLength(1);
+                        path = AStarSearch(grid, currentX, currentY, goalX, goalY);
+
+                        snake.AddLength(1);
+
+                        Console.SetCursorPosition(0, grid.RowCount() + 1);
+                        score++;
+                        Console.Write($"Score: (you/computer) {score}/{computerScore}");
+                    }
                 }
 
-                if (stopwatch.ElapsedMilliseconds >= 100 && path.Any())
+                if (stopwatch.ElapsedMilliseconds >= speed && path.Any())
                 {
                     Cell cell = path.Pop();
-
                     int deltaX = cell.X - currentX;
                     int deltaY = cell.Y - currentY;
 
@@ -85,46 +156,34 @@ namespace ConsoleSnakeCompetition
                     if (grid.GetValue(computer.GetX(), computer.GetY()) == '%')
                     {
                         grid.SetValue(computer.GetX(), computer.GetY(), ' ');
-
-                        goalX = rnd.Next(1, grid.RowCount() - 2);
-                        goalY = rnd.Next(1, grid.ColumnCount() - 2);
-                        while (grid.GetValue(goalX, goalY) == '*')
-                        {
-                            goalX = rnd.Next(1, grid.RowCount() - 2);
-                            goalY = rnd.Next(1, grid.ColumnCount() - 2);
-                        }
-                        grid.SetValue(goalX, goalY, '%');
-
-                        Console.SetCursorPosition(goalY, goalX);
-                        Console.Write('%');
+                        GenerateRandomXY(grid, out goalX, out goalY);
+                        SetNewGoal(grid, goalX, goalY);
 
                         path = AStarSearch(grid, currentX, currentY, goalX, goalY);
-
                         computer.AddLength(1);
+
+                        Console.SetCursorPosition(0, grid.RowCount() + 1);
+                        computerScore++;
+                        Console.Write($"Score: (you/computer) {score}/{computerScore}");
                     }
                 }
+            }
 
-                if (Console.KeyAvailable)
-                {
-                    ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-
-                    if (keyInfo.Key == ConsoleKey.UpArrow && grid.GetValue(snake.GetX() - 1, snake.GetY()) != '*')
-                    {
-                        snake.Move(Snake.Direction.Up);
-                    }
-                    else if (keyInfo.Key == ConsoleKey.DownArrow && grid.GetValue(snake.GetX() + 1, snake.GetY()) != '*')
-                    {
-                        snake.Move(Snake.Direction.Down);
-                    }
-                    else if (keyInfo.Key == ConsoleKey.LeftArrow && grid.GetValue(snake.GetX(), snake.GetY() - 1) != '*')
-                    {
-                        snake.Move(Snake.Direction.Left);
-                    }
-                    else if (keyInfo.Key == ConsoleKey.RightArrow && grid.GetValue(snake.GetX(), snake.GetY() + 1) != '*')
-                    {
-                        snake.Move(Snake.Direction.Right);
-                    }
-                } 
+            Console.Clear();
+            if (score > computerScore)
+            {
+                Console.WriteLine("Congrats you won");
+                Console.WriteLine($"Score: (you/computer) {score}/{computerScore}");
+            }
+            else if (score == computerScore)
+            {
+                Console.WriteLine("It was a draw");
+                Console.WriteLine($"Score: (you/computer) {score}/{computerScore}");
+            }
+            else
+            {
+                Console.WriteLine("You loose");
+                Console.WriteLine($"Score: (you/computer) {score}/{computerScore}");
             }
         }
 
@@ -141,6 +200,25 @@ namespace ConsoleSnakeCompetition
             }
 
             Console.WriteLine(toPrint);
+        }
+
+        private static void SetNewGoal(Grid<char> grid, int goalX, int goalY)
+        {
+            grid.SetValue(goalX, goalY, '%');
+            Console.SetCursorPosition(goalY, goalX);
+            Console.Write('%');
+        }
+
+        private static void GenerateRandomXY(Grid<char> grid, out int x, out int y)
+        {
+            Random rnd = new Random();
+            x = rnd.Next(1, grid.RowCount() - 2);
+            y = rnd.Next(1, grid.ColumnCount() - 2);
+            while (grid.GetValue(x, y) == '*')
+            {
+                x = rnd.Next(1, grid.RowCount() - 2);
+                y = rnd.Next(1, grid.ColumnCount() - 2);
+            }
         }
 
         public static Stack<Cell> AStarSearch(Grid<char> grid, int startX, int startY, int goalX, int goalY)
@@ -307,6 +385,16 @@ namespace ConsoleSnakeCompetition
         }
 
         
+    }
+
+    public static class Output
+    {
+        public static void Write(ConsoleColor color, char value)
+        {
+            Console.ForegroundColor = color;
+            Console.Write(value);
+            Console.ResetColor();
+        }
     }
 }
 
