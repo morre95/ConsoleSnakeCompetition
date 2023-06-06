@@ -245,7 +245,7 @@ namespace ConsoleSnakeCompetition
 
         static void InitGame()
         {
-
+            Console.Clear();
             List<string> ascii = new List<string>() {
             @" /$$$$$$                      /$$                 ",
             @" /$$__  $$                    | $$                ",
