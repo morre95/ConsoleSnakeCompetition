@@ -15,9 +15,9 @@ namespace ConsoleSnakeCompetition.Utilities
 
         public int Speed { get; set; } = 1;
 
-        public int MinSpeedValue { get; set; } = 50;
-        public int MaxSpeedValue { get; set; } = 400;
-        public int StepSpeedCount { get; set; } = 20;
+        public int MinSpeedValue { get; set; } = 5;
+        public int MaxSpeedValue { get; set; } = 800;
+        public int StepSpeedCount { get; set; } = 50;
 
         public string ThemeColor { get; set; } = "Blue";
 

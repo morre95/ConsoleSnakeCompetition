@@ -258,7 +258,7 @@ namespace ConsoleSnakeCompetition
 
             ascii.ForEach(Console.WriteLine);
 
-                Menu menu = new Menu(
+            Menu menu = new Menu(
                 new Option("Start"),
                 new Option("Speed", SetSpeed),
                 new Option("Scoreboard", NotImplementedException)
@@ -473,6 +473,7 @@ namespace ConsoleSnakeCompetition
             }
 
             WaitTermination();
+            InitGame();
         }
 
         static void WaitTermination()
