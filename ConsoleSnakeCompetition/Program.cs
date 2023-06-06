@@ -1,17 +1,18 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
+using System.Formats.Asn1;
 using System.Text.Json;
 using ConsoleSnakeCompetition.Classes.Game;
 using ConsoleSnakeCompetition.Classes.Menu;
 using ConsoleSnakeCompetition.Classes.Player;
 using ConsoleSnakeCompetition.Classes.Snake;
 using ConsoleSnakeCompetition.Utilities;
+using ConsoleSnakeCompetition.Utilities.Logging;
 
 namespace ConsoleSnakeCompetition
 {
     internal class Program
     {
-
         static void Main(string[] args)
         {
 
@@ -37,6 +38,9 @@ namespace ConsoleSnakeCompetition
             Logger<Snake>.Instance.Trace("Trace the snake");
             Logger<Menu>.Instance.Debug("Nu debuggar vi menu");
             Logger<AppSettings>.Instance.Success("Yes det funkade");
+
+            Log.Error("Error");
+            Log.Debug("Debug", "Foo", "Bar", 1, 2, 'E');
             return;*/
 
             AppSettings.Instance.LoadSettings();
