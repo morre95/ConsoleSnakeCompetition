@@ -1,21 +1,57 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
+using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
+using System.Xml.Serialization;
 using ConsoleSnakeCompetition.Classes;
+
 
 namespace ConsoleSnakeCompetition
 {
     internal class Program
     {
+
         static void Main(string[] args)
         {
-            Console.CursorVisible = false;
-            int minValue = 50;
-            int maxValue = 400;
-            int stepCount = 20;
 
-            double scaleStep = (maxValue - minValue) / (double)(stepCount - 1);
-            int selectedValue = 1;
+            AppSettings.Instance.LoadSettings();
+
+            Console.CursorVisible = false;
+
+            InitGame();
+        }
+
+        static void InitGame()
+        {
+            Menu menu = new Menu(
+                new Option("Start", Console.WriteLine),
+                new Option("Speed", SetSpeed)
+                );
+
+            menu.Display();
+
+            for (int i = 3; i > 0; i--)
+            {
+                Console.Clear();
+                Console.WriteLine($"Selected speed: {AppSettings.Instance.Speed}");
+                Console.WriteLine($"Ready? {new string('.', i)} ");
+                Thread.Sleep(850);
+            }
+            Console.Clear();
+            Console.WriteLine("GO!!!");
+            Thread.Sleep(600);
+            Console.Clear();
+
+            Run(AppSettings.Instance.GetDelayMS());
+        }
+
+        private static void SetSpeed()
+        {
+            int stepCount = AppSettings.Instance.StepSpeedCount;
+
+            int selectedValue = AppSettings.Instance.Speed;
             while (true)
             {
                 Console.Clear();
@@ -37,22 +73,13 @@ namespace ConsoleSnakeCompetition
                 }
             }
 
-            int speed = (int)(maxValue - (scaleStep * (selectedValue - 1)));
+            AppSettings.Instance.Speed = selectedValue;
 
-            for (int i = 3; i > 0; i--)
-            {
-                Console.Clear();
-                Console.WriteLine($"Selected speed: {selectedValue}");
-                Console.WriteLine($"Ready? {new string('.', i)} ");
-                Thread.Sleep(850);
-            }
-            Console.Clear();
-            Console.WriteLine("GO!!!");
-            Thread.Sleep(600);
-            Console.Clear();
-            Run(speed);
+            AppSettings.Instance.SaveSettings();
+            InitGame();
         }
-        static void Run(int speed)
+
+        static void Run(int delayMS)
         {
             //int rows = 20, cols = 80;
             //Grid<char> grid = PopulateEmptyGrid(rows, cols);
@@ -140,7 +167,7 @@ namespace ConsoleSnakeCompetition
                     }
                 }
 
-                if (stopwatch.ElapsedMilliseconds >= speed && path.Any())
+                if (stopwatch.ElapsedMilliseconds >= delayMS && path.Any())
                 {
                     Cell cell = path.Pop();
                     int deltaX = cell.X - currentX;
@@ -389,11 +416,210 @@ namespace ConsoleSnakeCompetition
 
     public static class Output
     {
+        public static void WriteLine(ConsoleColor color, string value)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(value);
+            Console.ResetColor();
+        }
+
+        public static void Write(ConsoleColor color, string value)
+        {
+            Console.ForegroundColor = color;
+            Console.Write(value);
+            Console.ResetColor();
+        }
+
         public static void Write(ConsoleColor color, char value)
         {
             Console.ForegroundColor = color;
             Console.Write(value);
             Console.ResetColor();
+        }
+    }
+
+    public class Option
+    {
+        public string Name
+        {
+            get;
+        }
+        public Action Callback
+        {
+            get;
+        }
+
+        public Option(string name, Action callback)
+        {
+            Name = name;
+            Callback = callback;
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+    }
+
+    public class Menu
+    {
+        const int startX = 0;
+        const int startY = 0;
+        const int optionsPerLine = 2;
+        const int spacingPerLine = 14;
+
+        private List<Option> Options
+        {
+            get; set;
+        }
+
+        public Menu()
+        {
+            Options = new List<Option>();
+        }
+
+        public Menu(List<Option> options)
+        {
+            Options = options;
+        }
+
+        public Menu(params Option[] options)
+        {
+            Options = new List<Option>(options);
+        }
+
+        public void Display()
+        {
+            int choice = 0;
+
+            ConsoleKey key;
+
+            Console.CursorVisible = false;
+            do
+            {
+                WriteMenu(choice);
+
+                key = Console.ReadKey(true).Key;
+
+                switch (key)
+                {
+                    case ConsoleKey.LeftArrow:
+                        {
+                            if (choice % optionsPerLine > 0)
+                                choice--;
+                            break;
+                        }
+                    case ConsoleKey.RightArrow:
+                        {
+                            if (choice % optionsPerLine < optionsPerLine - 1)
+                                choice++;
+                            break;
+                        }
+                    case ConsoleKey.UpArrow:
+                        {
+                            if (choice >= optionsPerLine)
+                                choice -= optionsPerLine;
+                            break;
+                        }
+                    case ConsoleKey.DownArrow:
+                        {
+                            if (choice + optionsPerLine < Options.Count)
+                                choice += optionsPerLine;
+                            break;
+                        }
+                }
+            } while (key != ConsoleKey.Enter);
+
+            Console.CursorVisible = true;
+            CallCallback(choice);
+        }
+
+        private void CallCallback(int choice)
+        {
+            if (choice >= 0 && choice < Options.Count)
+            {
+                Options[choice].Callback();
+            }
+            else
+            {
+                Console.WriteLine("\nInvalid selection. Please try again");
+                Thread.Sleep(3000);
+                Display();
+            }
+        }
+
+        private void WriteMenu(int choice)
+        {
+            Console.Clear();
+            for (int i = 0; i < Options.Count; i++)
+            {
+                Console.SetCursorPosition(startX + i % optionsPerLine * spacingPerLine, startY + i / optionsPerLine);
+
+                if (i == choice)
+                {
+                    Output.Write(ConsoleColor.Red, $"> {Options[i]}");
+                }
+                else
+                {
+                    Console.Write($"{Options[i]}");
+                }
+            }
+        }
+
+        public Menu Add(string option, Action callback)
+        {
+            Options.Add(new Option(option, callback));
+            return this;
+        }
+
+    }
+
+
+    public class AppSettings
+    {
+        private static readonly Lazy<AppSettings> instance = new Lazy<AppSettings>(() => new AppSettings());
+
+        public static AppSettings Instance => instance.Value;
+
+        public string GameName { get; set; } = "The Best Game";
+
+        public int Speed { get; set; } = 1;
+
+        public int MinSpeedValue { get; set; } = 50;
+        public int MaxSpeedValue { get; set; } = 400;
+        public int StepSpeedCount { get; set; } = 20;
+
+        public string ThemeColor { get; set; } = "Blue";
+
+        private AppSettings() { }
+
+        public int GetDelayMS()
+        {
+            double scaleStep = (MaxSpeedValue - MinSpeedValue) / (double)(StepSpeedCount - 1);
+            return (int)(MaxSpeedValue - (scaleStep * (Speed - 1))); 
+        }
+
+        public void LoadSettings()
+        {
+            if (File.Exists("settings.xml"))
+            {
+                using (StreamReader reader = new StreamReader("settings.xml"))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(AppSettings));
+                    AppSettings loadedSettings = (AppSettings)serializer.Deserialize(reader);
+                    Speed = loadedSettings.Speed;
+                    ThemeColor = loadedSettings.ThemeColor;
+                }
+            }
+        }
+
+        public void SaveSettings()
+        {
+            using (StreamWriter writer = new StreamWriter("settings.xml"))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(AppSettings));
+                serializer.Serialize(writer, this);
+            }
         }
     }
 }
