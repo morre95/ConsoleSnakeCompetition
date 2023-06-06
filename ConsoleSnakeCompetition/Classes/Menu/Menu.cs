@@ -4,9 +4,9 @@ namespace ConsoleSnakeCompetition.Classes.Menu
 {
     public class Menu
     {
-        const int startX = 0;
-        const int startY = 0;
-        const int optionsPerLine = 2;
+        const int startX = 5;
+        const int startY = 9;
+        const int optionsPerLine = 3;
         const int spacingPerLine = 14;
 
         private List<Option> Options
@@ -91,7 +91,7 @@ namespace ConsoleSnakeCompetition.Classes.Menu
 
         private void WriteMenu(int choice)
         {
-            Console.Clear();
+            //Console.Clear();
             for (var i = 0; i < Options.Count; i++)
             {
                 Console.SetCursorPosition(startX + i % optionsPerLine * spacingPerLine, startY + i / optionsPerLine);

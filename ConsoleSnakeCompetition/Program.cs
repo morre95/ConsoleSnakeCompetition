@@ -231,12 +231,12 @@ namespace ConsoleSnakeCompetition
             Output.Write(ConsoleColor.Red, 12.55);
             Output.Write(ConsoleColor.Red, 22.5f);*/
 
-            Logger<AppSettings>.Instance.Warn("Värdet måste varnas");
+            /*Logger<AppSettings>.Instance.Warn("Värdet måste varnas");
             Logger<AppSettings>.Instance.Error("Error");
             Logger<Snake>.Instance.Trace("Trace the snake");
             Logger<Menu>.Instance.Debug("Nu debuggar vi menu");
             Logger<AppSettings>.Instance.Success("Yes det funkade");
-            return;
+            return;*/
 
             AppSettings.Instance.LoadSettings();
 
@@ -245,8 +245,20 @@ namespace ConsoleSnakeCompetition
 
         static void InitGame()
         {
-            
-            Menu menu = new Menu(
+
+            List<string> ascii = new List<string>() {
+            @" /$$$$$$                      /$$                 ",
+            @" /$$__  $$                    | $$                ",
+            @"| $$  \__/ /$$$$$$$   /$$$$$$ | $$   /$$  /$$$$$$ ",
+            @"|  $$$$$$ | $$__  $$ |____  $$| $$  /$$/ /$$__  $$",
+            @" \____  $$| $$  \ $$  /$$$$$$$| $$$$$$/ | $$$$$$$$",
+            @" /$$  \ $$| $$  | $$ /$$__  $$| $$_  $$ | $$_____/",
+            @"|  $$$$$$/| $$  | $$|  $$$$$$$| $$ \  $$|  $$$$$$$",
+            @" \______/ |__/  |__/ \_______/|__/  \__/ \_______/"};
+
+            ascii.ForEach(Console.WriteLine);
+
+                Menu menu = new Menu(
                 new Option("Start"),
                 new Option("Speed", SetSpeed),
                 new Option("Scoreboard", NotImplementedException)
