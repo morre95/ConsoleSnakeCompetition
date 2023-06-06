@@ -75,10 +75,11 @@
 
         private void CallCallback(int choice)
         {
-            if (choice >= 0 && choice < Options.Count)
+            if (choice >= 0 && choice < Options.Count && Options[choice].Callback != null)
             {
                 Options[choice].Callback();
             }
+            else if (Options[choice].Callback == null) { }
             else
             {
                 Console.WriteLine("\nInvalid selection. Please try again");

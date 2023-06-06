@@ -22,7 +22,7 @@ namespace ConsoleSnakeCompetition
         static void InitGame()
         {
             Menu menu = new Menu(
-                new Option("Start", Console.WriteLine),
+                new Option("Start"),
                 new Option("Speed", SetSpeed)
                 );
 

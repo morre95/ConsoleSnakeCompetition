@@ -6,12 +6,12 @@
         {
             get;
         }
-        public Action Callback
+        public Action? Callback
         {
             get;
         }
 
-        public Option(string name, Action callback)
+        public Option(string name, Action? callback = null)
         {
             Name = name;
             Callback = callback;
