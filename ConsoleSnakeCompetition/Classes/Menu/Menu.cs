@@ -77,11 +77,10 @@ namespace ConsoleSnakeCompetition.Classes.Menu
 
         private void CallCallback(int choice)
         {
-            if (choice >= 0 && choice < Options.Count && Options[choice].Callback != null)
+            if (choice >= 0 && choice < Options.Count)
             {
                 Options[choice].Callback();
             }
-            else if (Options[choice].Callback == null) { }
             else
             {
                 Console.WriteLine("\nInvalid selection. Please try again");
@@ -99,11 +98,11 @@ namespace ConsoleSnakeCompetition.Classes.Menu
 
                 if (i == choice)
                 {
-                    Output.Write(ConsoleColor.Red, $"> {Options[i]}");
+                    Output.Write(ConsoleColor.Red, Options[i]);
                 }
                 else
                 {
-                    Console.Write($"{Options[i]}");
+                    Console.Write(Options[i]);
                 }
             }
         }

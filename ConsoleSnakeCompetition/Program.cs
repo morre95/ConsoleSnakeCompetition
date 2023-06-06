@@ -25,7 +25,7 @@ namespace ConsoleSnakeCompetition
         }
     }
 
-    public class ScoreBoard
+    public abstract class ScoreBoard
     {
         public List<PlayerScore> Repository { get; private set; } = new();
 
@@ -36,39 +36,39 @@ namespace ConsoleSnakeCompetition
             Repository = new List<PlayerScore>(scores);
         }
 
-        public void Add(PlayerScore score)
+        public virtual void Add(PlayerScore score)
         {
             Repository.Add(score); 
         }
 
-        public void AddRange(params PlayerScore[] scores)
+        public virtual void AddRange(params PlayerScore[] scores)
         {
             Repository.AddRange(scores);
         }
 
-        public List<PlayerScore> GetLeaderboard()
+        public virtual List<PlayerScore> GetLeaderboardAsc()
         {
             return Repository.OrderBy(x => x.Score).ToList();
         }
         
-        public List<PlayerScore> GetLeaderboardDesc()
+        public virtual List<PlayerScore> GetLeaderboard()
         {
             return Repository.OrderByDescending(x => x.Score).ToList();
         }
 
-        public void Save()
+        public virtual void Save()
         {
             string fileName = "scores.json";
             SaveToFile(ScoreBoardPath + fileName);
         }
 
-        public void SaveToFile(string fileName)
+        public virtual void SaveToFile(string fileName)
         {
             string jsonString = JsonSerializer.Serialize(Repository);
             File.WriteAllText(fileName, jsonString);
         }
 
-        public void LoadFromFile(string fileName)
+        public virtual void LoadFromFile(string fileName)
         {
             string jsonString = File.ReadAllText(fileName);
             Repository = JsonSerializer.Deserialize<List<PlayerScore>>(jsonString)!;
@@ -77,14 +77,30 @@ namespace ConsoleSnakeCompetition
         public override string ToString()
         {
             TableBuilder tb = new TableBuilder();
-            tb.AddRow("Name", "Score", "When");
-            tb.AddRow("----", "----", "-----------");
-            foreach (PlayerScore score in Repository)
+            tb.AddRow("#", "Name", "Score", "When");
+            tb.AddRow("--", "----", "-----", "-----------");
+            int i = 1;
+            foreach (PlayerScore score in GetLeaderboard())
             {
-                tb.AddRow(score.PlayerName, score.Score.ToString(), score.Date.ToString("yyyy-MM-dd HH:mm:ss"));
+                tb.AddRow(i++, score.PlayerName, score.Score.ToString(), score.Date.ToString("yyyy-MM-dd HH:mm:ss"));
             }
             return tb.Output();
         }
+    }
+
+    public class TopScoreBoard : ScoreBoard
+    {
+        public int NumberOf { get; set; }
+        public TopScoreBoard(params PlayerScore[] scores) : base(scores)
+        {
+            NumberOf = 10;
+        }
+
+        public override List<PlayerScore> GetLeaderboard()
+        {
+            return Repository.OrderByDescending(x => x.Score).Take(NumberOf).ToList();
+        }
+
     }
 
 
@@ -198,14 +214,22 @@ namespace ConsoleSnakeCompetition
         static void Main(string[] args)
         {
 
-            /*ScoreBoard score = new ScoreBoard(
-                new PlayerScore("Kalle", 113, DateTime.Now),
-                new PlayerScore("Foo", 99, DateTime.Parse("2023-02-05 12:22:11")),
-                new PlayerScore("Bar", 458, DateTime.Parse("1975-02-05 22:22:22"))
-                );
+            Output.WriteLine(ConsoleColor.Red, "sdfgh");
+            Output.WriteLine(ConsoleColor.Red, '#');
+            Output.WriteLine(ConsoleColor.Red, 12);
+            Output.WriteLine(ConsoleColor.Red, null);
+            Output.WriteLine(ConsoleColor.Red, false);
+            Output.WriteLine(ConsoleColor.Red, 12.55);
+            Output.WriteLine(ConsoleColor.Red, 22.5f);
 
-            Console.WriteLine(score.ToString());
-            return;*/
+
+            Output.Write(ConsoleColor.Red, "sdfgh");
+            Output.Write(ConsoleColor.Red, '#');
+            Output.Write(ConsoleColor.Red, 12);
+            Output.Write(ConsoleColor.Red, null);
+            Output.Write(ConsoleColor.Red, false);
+            Output.Write(ConsoleColor.Red, 12.55);
+            Output.Write(ConsoleColor.Red, 22.5f);
 
             /*Logger<AppSettings>.Instance.Warn("Värdet måste varnas");
             Logger<AppSettings>.Instance.Error("Error");
@@ -221,9 +245,11 @@ namespace ConsoleSnakeCompetition
 
         static void InitGame()
         {
+            
             Menu menu = new Menu(
                 new Option("Start"),
-                new Option("Speed", SetSpeed)
+                new Option("Speed", SetSpeed),
+                new Option("Scoreboard", NotImplementedException)
                 );
 
             menu.Display();
@@ -241,6 +267,29 @@ namespace ConsoleSnakeCompetition
             Console.Clear();
 
             Run(AppSettings.Instance.GetDelayMS());
+        }
+
+        private static void NotImplementedException()
+        {
+            //throw new NotImplementedException();
+            ScoreBoard score = new TopScoreBoard(
+                new PlayerScore("Kalle", 113, DateTime.Now),
+                new PlayerScore("Foo", 99, DateTime.Parse("2023-02-05 12:22:11")),
+                new PlayerScore("Bar1", 458, DateTime.Parse("1975-02-05 22:22:22")),
+                new PlayerScore("Bar2", 459, DateTime.Parse("1975-02-05 22:22:22")),
+                new PlayerScore("Bar3", 16, DateTime.Parse("1975-02-05 22:22:22")),
+                new PlayerScore("Bar4", 461, DateTime.Parse("1975-02-05 22:22:22")),
+                new PlayerScore("Bar5", 462, DateTime.Parse("1975-02-05 22:22:22")),
+                new PlayerScore("Bar6", 463, DateTime.Parse("1975-02-05 22:22:22")),
+                new PlayerScore("Bar7", 120, DateTime.Parse("1975-02-05 22:22:22")),
+                new PlayerScore("Bar8", 88, DateTime.Parse("1975-02-05 22:22:22")),
+                new PlayerScore("Bar9", 466, DateTime.Parse("1975-02-05 22:22:22"))
+                );
+
+            Console.Clear();
+            Console.WriteLine(score);
+            WaitTermination();
+            InitGame();
         }
 
         private static void SetSpeed()

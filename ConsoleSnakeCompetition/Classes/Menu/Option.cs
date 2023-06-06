@@ -11,10 +11,12 @@
             get;
         }
 
+        public static Action DoNothing = () => { };
+
         public Option(string name, Action? callback = null)
         {
             Name = name;
-            Callback = callback;
+            Callback = callback == null ? DoNothing : callback;
         }
 
         public override string ToString()
