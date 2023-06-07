@@ -6,13 +6,11 @@ namespace ConsoleSnakeCompetition.Utilities.Logging
     {
         private readonly Type _className;
 
-        private static readonly string executionPath = Path.GetFullPath("Resources/Logging/");
+        private readonly string executionPath = Path.GetFullPath("Resources/Logging/");
 
-        private static readonly Lazy<Logger<TClass>> instance = new Lazy<Logger<TClass>>(() => new Logger<TClass>());
+        public static Logger<TClass> Instance => new Logger<TClass>();
 
-        public static Logger<TClass> Instance => instance.Value;
-
-        private Logger()
+        public Logger()
         {
             _className = typeof(TClass);
         }
@@ -62,16 +60,17 @@ namespace ConsoleSnakeCompetition.Utilities.Logging
             LogToFile(logFile, $"Occurred at [{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] in [{_className.FullName}]: {message}");
         }
 
-        private static string GetLogFile(ConsoleColor color)
+        private string GetLogFile(ConsoleColor color)
         {
-            if (color == ConsoleColor.Yellow) return "error.log";
+            if (color == ConsoleColor.Yellow) return "warn.log";
             if (color == ConsoleColor.Cyan) return "debug.log";
             if (color == ConsoleColor.Red) return "error.log";
+            if (color == ConsoleColor.Green) return "success.log";
             else return "trace.log";
         }
 
 
-        private static void LogToFile(string file, string content)
+        private void LogToFile(string file, string content)
         {
             using (var fileWriter = new StreamWriter(executionPath + file, true))
             {

@@ -38,11 +38,6 @@ namespace ConsoleSnakeCompetition.Utilities.Logging
         {
             Logger<Program>.Instance.Fatal(message, args);
         }
-        
-        public static void Test(string message, [CallerMemberName] string memberName = null, params object[] args)
-        {
-            Logger<Program>.Instance.Success(memberName, args);
-        }
     }
 }
 

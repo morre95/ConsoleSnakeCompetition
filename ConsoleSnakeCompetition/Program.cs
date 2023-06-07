@@ -6,6 +6,7 @@ using ConsoleSnakeCompetition.Classes.Game;
 using ConsoleSnakeCompetition.Classes.Menu;
 using ConsoleSnakeCompetition.Classes.Player;
 using ConsoleSnakeCompetition.Classes.Snake;
+using ConsoleSnakeCompetition.Pages.GamePlay;
 using ConsoleSnakeCompetition.Utilities;
 using ConsoleSnakeCompetition.Utilities.Logging;
 
@@ -33,27 +34,55 @@ namespace ConsoleSnakeCompetition
             Output.Write(ConsoleColor.Red, 12.55);
             Output.Write(ConsoleColor.Red, 22.5f);*/
 
-            Logger<AppSettings>.Instance.Warn("Värdet måste varnas");
-            Logger<AppSettings>.Instance.Error("Error");
-            Logger<Snake>.Instance.Trace("Trace the snake");
-            Logger<Menu>.Instance.Debug("Nu debuggar vi menu");
-            Logger<AppSettings>.Instance.Success("Yes det funkade");
+            /*var logger = new Logger<Program>();
+            logger.Warn("Värdet måste varnas");
+            logger.Error("Error");
+
+            var sLogger = new Logger<Snake>();
+            sLogger.Trace("Trace the snake");
+            new Logger<Snake>().Debug("Nu debuggar vi menu");
+            new Logger<AppSettings>().Success("Yes det funkade");
+
+            Logger<Menu>.Instance.Debug("Debug message");
 
             Log.Error("Error");
             Log.Debug("Debug", "Foo", "Bar", 1, 2, 'E');
             Log.Test("Debug");
-            return;
+            return;*/
+
+            string directoryPath = Path.GetFullPath(@"Resources"); ;
+
+            if (!Directory.Exists(directoryPath))
+            {
+                try
+                {
+                    Directory.CreateDirectory(@$"{directoryPath}\Grids");
+                    Directory.CreateDirectory(@$"{directoryPath}\Logging");
+                    Directory.CreateDirectory(@$"{directoryPath}\Scores");
+                    Directory.CreateDirectory(@$"{directoryPath}\Settings");
+                    Log.Success("Installing Script");
+                }
+                catch (Exception ex)
+                {
+                    Logger<Program>.Instance.Error(ex);
+                }
+            }
+
 
             AppSettings.Instance.LoadSettings();
 
-            InitGame();
+            Game.Init();
         }
 
         static void InitGame()
         {
+            // INFO: Används inte längre
+            // TBD: Bör tas bort
+
+
             Console.Clear();
             List<string> ascii = new List<string>() {
-            @" /$$$$$$                      /$$                 ",
+            @"  /$$$$$$                      /$$                ",
             @" /$$__  $$                    | $$                ",
             @"| $$  \__/ /$$$$$$$   /$$$$$$ | $$   /$$  /$$$$$$ ",
             @"|  $$$$$$ | $$__  $$ |____  $$| $$  /$$/ /$$__  $$",
@@ -93,6 +122,9 @@ namespace ConsoleSnakeCompetition
 
         private static void NotImplementedException()
         {
+            // INFO: Används inte längre
+            // TBD: Bör tas bort
+
             //throw new NotImplementedException();
             ScoreBoard score = new TopScoreBoard(
                 new PlayerScore("Kalle", 113, DateTime.Now),
@@ -116,6 +148,9 @@ namespace ConsoleSnakeCompetition
 
         private static void SetSpeed()
         {
+            // INFO: Används inte längre
+            // TBD: Bör tas bort
+
             int stepCount = AppSettings.Instance.StepSpeedCount;
             int selectedValue = AppSettings.Instance.Speed;
 

@@ -1,4 +1,6 @@
-﻿using ConsoleSnakeCompetition.Utilities;
+﻿using System.Diagnostics;
+using System.Reflection;
+using ConsoleSnakeCompetition.Utilities;
 
 namespace ConsoleSnakeCompetition.Classes.Menu
 {
@@ -9,6 +11,11 @@ namespace ConsoleSnakeCompetition.Classes.Menu
         const int optionsPerLine = 3;
         const int spacingPerLine = 14;
 
+        private Stack<StackFrame> History
+        {
+            get; set;
+        }
+
         private List<Option> Options
         {
             get; set;
@@ -17,6 +24,7 @@ namespace ConsoleSnakeCompetition.Classes.Menu
         public Menu()
         {
             Options = new List<Option>();
+            History = new Stack<StackFrame>();
         }
 
         public Menu(List<Option> options)
@@ -72,6 +80,10 @@ namespace ConsoleSnakeCompetition.Classes.Menu
         {
             if (choice >= 0 && choice < Options.Count)
             {
+                StackTrace stackTrace = new StackTrace();
+                StackFrame callingFrame = stackTrace.GetFrame(1);
+                History.Push(callingFrame);
+
                 Options[choice].Callback();
             }
             else
