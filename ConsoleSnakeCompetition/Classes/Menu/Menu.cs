@@ -6,35 +6,43 @@ namespace ConsoleSnakeCompetition.Classes.Menu
 {
     public class Menu
     {
-        const int startX = 5;
-        const int startY = 9;
-        const int optionsPerLine = 3;
-        const int spacingPerLine = 14;
+        public int startX { get; private set; }
+        public int startY { get; private set; }
+        public int optionsPerLine { get; private set; }
+        public int spacingPerLine { get; private set; }
 
-        private Stack<StackFrame> History
-        {
-            get; set;
-        }
-
-        private List<Option> Options
-        {
-            get; set;
-        }
+        private List<Option> Options { get; set; }
 
         public Menu()
         {
             Options = new List<Option>();
-            History = new Stack<StackFrame>();
+            SetDefaultValues();
         }
 
         public Menu(List<Option> options)
         {
             Options = options;
+            SetDefaultValues();
         }
 
         public Menu(params Option[] options)
         {
             Options = new List<Option>(options);
+            SetDefaultValues();
+        }
+
+        private void SetDefaultValues()
+        {
+            startX = 5;
+            startY = 9;
+            optionsPerLine = 3;
+            spacingPerLine = 14;
+        }
+
+        public void SetPosition(int x, int y)
+        {
+            startX = x;
+            startY = y;
         }
 
         public void Display()
@@ -80,10 +88,6 @@ namespace ConsoleSnakeCompetition.Classes.Menu
         {
             if (choice >= 0 && choice < Options.Count)
             {
-                StackTrace stackTrace = new StackTrace();
-                StackFrame callingFrame = stackTrace.GetFrame(1);
-                //History.Push(callingFrame);
-
                 Options[choice].Callback();
             }
             else
