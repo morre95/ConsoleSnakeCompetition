@@ -82,7 +82,7 @@ namespace ConsoleSnakeCompetition.Classes.Menu
             {
                 StackTrace stackTrace = new StackTrace();
                 StackFrame callingFrame = stackTrace.GetFrame(1);
-                History.Push(callingFrame);
+                //History.Push(callingFrame);
 
                 Options[choice].Callback();
             }
