@@ -21,6 +21,7 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
                 new Option("Start", Game.Init),
                 new Option("Game Speed", SetSpeed)
                 );
+            menu.SetPosition(0, 0);
             menu.Display();
         }
         private static void SetSpeed()
