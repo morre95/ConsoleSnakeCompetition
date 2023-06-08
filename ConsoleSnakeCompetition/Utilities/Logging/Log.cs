@@ -43,11 +43,6 @@ namespace ConsoleSnakeCompetition.Utilities.Logging
             LogInternal(GetCallingClassName(), "ERROR", e.ToString());
         }
 
-        public static void Fatal(string message, params object[] args)
-        {
-            LogInternal(GetCallingClassName(), "FATAL", message, args);
-        }
-
         private static void LogInternal(string callingClassName, string level, string message, params object[] args)
         {
             var dict = new Dictionary<string, LoggerColor> {
@@ -57,6 +52,8 @@ namespace ConsoleSnakeCompetition.Utilities.Logging
                 { "SUCCESS", LoggerColor.Success },
                 { "ERROR", LoggerColor.Error }
             };
+
+            // TBD: Bör kanske vara något annat än Program
             var instance = Logger<Program>.Instance;
             instance.ConsoleOutput = _consoleOutput;
             instance.Log(message, dict[level], callingClassName, args);
@@ -67,7 +64,6 @@ namespace ConsoleSnakeCompetition.Utilities.Logging
             StackTrace stackTrace = new StackTrace();
             StackFrame callingFrame = stackTrace.GetFrame(2);
             MethodBase callingMethod = callingFrame.GetMethod();
-            //string callingClassName = callingMethod.DeclaringType.Name;
             string callingClassName = callingMethod.DeclaringType.Namespace;
             callingClassName += ".";
             callingClassName += callingMethod.DeclaringType.Name;
