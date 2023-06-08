@@ -7,7 +7,7 @@ using ConsoleSnakeCompetition.Classes.Menu;
 using ConsoleSnakeCompetition.Pages.GamePlay;
 using ConsoleSnakeCompetition.Utilities;
 
-namespace ConsoleSnakeCompetition.Pages.GamePlay
+namespace ConsoleSnakeCompetition.Pages.Admin
 {
     internal class Config
     {
@@ -17,9 +17,13 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
             Console.Clear();
             // TBD: Kolla om det går att ta reda på vart Menu callas ifrån
             // *: Om det går kalla du kan skicka tillbaka användaren hit vid fel index
-            Menu menu = new Menu(
-                new Option("Start", Game.Init),
-                new Option("Game Speed", SetSpeed)
+            var menu = new Menu(
+                new Option("Home", Game.Init),
+                new Option("Game Speed", SetSpeed),
+                new Option("Rounds", Option.NIY),
+                new Option("Snake Color", Option.NIY),
+                new Option("Theme", Option.NIY),
+                new Option("Editor", GridEditor.Init)
                 );
             menu.SetPosition(0, 0);
             menu.Display();

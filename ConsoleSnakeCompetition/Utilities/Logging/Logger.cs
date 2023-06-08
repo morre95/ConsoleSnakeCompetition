@@ -10,54 +10,54 @@ namespace ConsoleSnakeCompetition.Utilities.Logging
 
         public static Logger<TClass> Instance => new Logger<TClass>();
 
+        public string ClassName => _className.FullName;
+
+        public bool ConsoleOutput { get; set; }
+
         public Logger()
         {
             _className = typeof(TClass);
+            ConsoleOutput = false;
         }
 
         public void Trace(string message, params object[] args)
         {
-            Log(message, ConsoleColor.White, args);
+            Log(message, ConsoleColor.White, ClassName, args);
         }
 
         public void Warn(string message, params object[] args)
         {
-            Log(message, ConsoleColor.Yellow, args);
+            Log(message, ConsoleColor.Yellow, ClassName, args);
         }
 
         public void Debug(string message, params object[] args)
         {
-            Log(message, ConsoleColor.Cyan, args);
+            Log(message, ConsoleColor.Cyan, ClassName, args);
         }
 
         public void Success(string message, params object[] args)
         {
-            Log(message, ConsoleColor.Green, args);
+            Log(message, ConsoleColor.Green, ClassName, args);
         }
 
         public void Error(string message, params object[] args)
         {
-            Log(message, ConsoleColor.Red, args);
+            Log(message, ConsoleColor.Red, ClassName, args);
         }
 
         public void Error(Exception e)
         {
-            Log("An error occurred: " + Environment.NewLine + e, ConsoleColor.Red);
+            Log("An error occurred: " + Environment.NewLine + e, ConsoleColor.Red, ClassName);
         }
 
-        public void Fatal(string message, params object[] args)
-        {
-            Log(message, ConsoleColor.Red, args);
-        }
-
-        private void Log(string message, ConsoleColor color, params object[] args)
+        public void Log(string message, ConsoleColor color, string className, params object[] args)
         {
             if (args.Length > 0) message += $" {string.Join(" ", args.Cast<object>().ToArray())}";
 
-            Output.WriteLine(color, $"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] {message}");
+            if (ConsoleOutput) Output.WriteLine(color, $"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] {message}");
             var logFile = GetLogFile(color);
 
-            LogToFile(logFile, $"Occurred at [{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] in [{_className.FullName}]: {message}");
+            LogToFile(logFile, $"Occurred at [{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] in [{className}]: {message}");
         }
 
         private string GetLogFile(ConsoleColor color)
@@ -68,7 +68,6 @@ namespace ConsoleSnakeCompetition.Utilities.Logging
             if (color == ConsoleColor.Green) return "success.log";
             else return "trace.log";
         }
-
 
         private void LogToFile(string file, string content)
         {

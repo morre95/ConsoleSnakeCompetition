@@ -32,6 +32,29 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
             return grid;
         }
 
+        public static void SaveToFile(Grid<char> grid)
+        {
+            Console.Write("Filename: ");
+            string fileName = Console.ReadLine()!;
+
+            if (!Directory.Exists(gridsPath)) Directory.CreateDirectory(gridsPath);
+
+            List<List<char>> gridList = new List<List<char>>();
+            for (int row = 0; row < grid.RowCount(); row++)
+            {
+                List<char> newRow = new List<char>();
+                for (int col = 0; col < grid.ColumnCount(); col++)
+                {
+                    newRow.Add(grid.GetValue(row, col));
+                }
+                gridList.Add(newRow);
+            }
+
+
+            string jsonString = JsonSerializer.Serialize(gridList);
+            File.WriteAllText(gridsPath + fileName + ".json", jsonString);
+        }
+
         public static Grid<char> PopulateEmptyGrid(int gridRows, int gridColumns)
         {
             Grid<char> gridList = new CharGrid(gridRows, gridColumns);
@@ -107,6 +130,11 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
             }
 
             return grid;
+        }
+
+        public static string[] GetJsonFiles()
+        {
+            return Directory.GetFiles(gridsPath, "*.json", SearchOption.AllDirectories);
         }
     }
 }

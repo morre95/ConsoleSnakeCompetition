@@ -6,10 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ConsoleSnakeCompetition.Classes.Algorithms;
 using ConsoleSnakeCompetition.Classes.Game;
 using ConsoleSnakeCompetition.Classes.Menu;
 using ConsoleSnakeCompetition.Classes.Player;
 using ConsoleSnakeCompetition.Classes.Snake;
+using ConsoleSnakeCompetition.Pages.Admin;
 using ConsoleSnakeCompetition.Utilities;
 
 

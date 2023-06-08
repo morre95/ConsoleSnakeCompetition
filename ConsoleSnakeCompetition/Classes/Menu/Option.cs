@@ -13,6 +13,8 @@
 
         public static Action DoNothing = () => { };
 
+        public static Action NIY = () => { throw new NotImplementedException("Not Implemeted Yet"); };
+
         public Option(string name, Action? callback = null)
         {
             Name = name;
