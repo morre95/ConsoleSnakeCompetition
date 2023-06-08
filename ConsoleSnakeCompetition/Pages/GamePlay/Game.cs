@@ -82,7 +82,18 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
         static void Run(Grid<char> grid, int delayMS)
         {
-            DrawGrid(grid);
+            ConsoleColor consoleColor;
+
+            if (!Enum.TryParse(AppSettings.Instance.ThemeColor, out consoleColor))
+            {
+                Console.WriteLine("Invalid Theme color, change that in settings");
+                Console.WriteLine("Press any key to continue to settings...");
+                Console.ReadLine();
+                Config.SelectThemeColor();
+                return;
+            }
+
+            DrawGrid(grid, consoleColor);
 
             int goalX, goalY;
             GenerateRandomXY(grid, out goalX, out goalY);
@@ -91,13 +102,21 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
             int startX, startY;
             GenerateRandomXY(grid, out startX, out startY);
 
-            Snake snake = new Snake(new Point(startX, startY), 5, '#', true);
+            Snake snake = new Snake(new Point(startX, startY), 
+                AppSettings.Instance.Player1StartLength, 
+                AppSettings.Instance.Player1Symbol, 
+                AppSettings.Instance.Player1Colorized, 
+                AppSettings.Instance.Player1ColorInverted);
             snake.Draw();
 
             int compStartX, compStartY;
             GenerateRandomXY(grid, out compStartX, out compStartY);
 
-            Snake computer = new Snake(new Point(compStartX, compStartY), 5, '?');
+            Snake computer = new Snake(new Point(compStartX, compStartY), 
+                AppSettings.Instance.ComputerStartLength,
+                AppSettings.Instance.ComputerSymbol,
+                AppSettings.Instance.ComputerColorized,
+                AppSettings.Instance.ComputerColorInverted);
             computer.Draw();
 
             Stopwatch stopwatch = new Stopwatch();
@@ -113,7 +132,9 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
             Console.CursorVisible = false;
 
-            while (true)
+            int bestOfRounds = AppSettings.Instance.BestOf == 0 ? int.MaxValue : AppSettings.Instance.BestOf;
+
+            while (score + computerScore < bestOfRounds)
             {
 
                 if (Console.KeyAvailable)
@@ -192,6 +213,12 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
             }
 
             Console.Clear();
+            // TBD: Infinity symbolen ser ut som en 8 när man skriver ut den
+            //string infinitySymbol = "\u221E";
+            //string bestOfStr = AppSettings.Instance.BestOf == 0 ? $"{infinitySymbol}, total rounds: {score + computerScore}" : AppSettings.Instance.BestOf.ToString();
+
+            string bestOfStr = bestOfRounds.ToString();
+            Console.WriteLine($"Best of: {bestOfStr}");
             if (score > computerScore)
             {
                 Console.WriteLine("Congrats you won");
@@ -212,7 +239,7 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
             Init();
         }
 
-        private static void DrawGrid(Grid<char> grid)
+        private static void DrawGrid(Grid<char> grid, ConsoleColor consoleColor)
         {
             string toPrint = "";
             for (int row = 0; row < grid.RowCount(); row++)
@@ -223,8 +250,9 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
                 }
                 toPrint += "\n";
             }
-
-            Console.WriteLine(toPrint);
+            
+            //Console.WriteLine(toPrint);
+            Output.WriteLine(consoleColor, toPrint);
         }
 
         private static void SetNewGoal(Grid<char> grid, int goalX, int goalY)

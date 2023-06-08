@@ -37,11 +37,12 @@ namespace ConsoleSnakeCompetition.Classes.Snake
             Color = color;
         }
 
-        public void DrawColorized()
+        public void DrawColorized(bool inverted)
         {
+            ConsoleColor[] colors = inverted ? Colors.Reverse().ToArray() : Colors;
             var i = _GetColorIndex();
             Console.SetCursorPosition(Position.Y, Position.X);
-            Output.Write(Colors[i], Symbol);
+            Output.Write(colors[i], Symbol);
             _SetNewColor(++i);
         }
 

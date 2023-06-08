@@ -1,4 +1,4 @@
-﻿namespace ConsoleSnakeCompetition.Classes.Game
+﻿namespace ConsoleSnakeCompetition.Classes.Algorithms
 {
     class Cell
     {

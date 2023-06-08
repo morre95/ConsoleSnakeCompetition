@@ -11,7 +11,7 @@ namespace ConsoleSnakeCompetition.Classes.Snake
 
         public char Symbol
         {
-            get; set;
+            get; private set;
         }
 
         public readonly char[] BodyTailSymbols = new char[4] { '^', 'v', '<', '>' };
@@ -25,12 +25,19 @@ namespace ConsoleSnakeCompetition.Classes.Snake
         private SnakePart Head => _body.First();
         private SnakePart Tail => _body.Last();
 
-        private bool DrawColorized;
+        private bool _drawColorized;
 
-        public Snake(Point startingPoint, int length, char symbol = '#', bool drawColorized = false)
+        public bool DrawColorized => _drawColorized;
+
+        private bool _colorInverted;
+
+        public bool ColorInverted => _colorInverted;
+
+        public Snake(Point startingPoint, int length, char symbol = '#', bool drawColorized = false, bool colorInverted = false)
         {
             Symbol = symbol;
-            DrawColorized = drawColorized;
+            _drawColorized = drawColorized;
+            _colorInverted = colorInverted;
 
             _body = Enumerable
                 .Range(0, length)
@@ -42,7 +49,7 @@ namespace ConsoleSnakeCompetition.Classes.Snake
         {
             foreach (var snakePart in _body)
             {
-                if (DrawColorized) snakePart.DrawColorized();
+                if (_drawColorized) snakePart.DrawColorized(ColorInverted);
                 else snakePart.Draw();
             }
         }
