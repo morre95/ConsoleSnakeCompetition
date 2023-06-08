@@ -37,7 +37,7 @@
             Console.ResetColor();
         }
 
-        static void WriteOnBottomLine(string text)
+        public static void WriteOnBottomLine(string text)
         {
             int x = Console.CursorLeft;
             int y = Console.CursorTop;
@@ -46,7 +46,7 @@
             Console.SetCursorPosition(x, y);
         }
 
-        static void WriteOnBottomLine(ConsoleColor color, string text)
+        public static void WriteOnBottomLine(ConsoleColor color, string text)
         {
             int x = Console.CursorLeft;
             int y = Console.CursorTop;

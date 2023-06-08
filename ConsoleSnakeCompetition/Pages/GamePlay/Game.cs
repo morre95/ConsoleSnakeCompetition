@@ -19,7 +19,7 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 {
     internal class Game
     {
-
+        public static string GameVersion => string.Format("{0:00}.{1:00}.{2:0000}", 0, 0, 0001);
         public static void Init()
         {
             Console.Clear();
@@ -40,6 +40,8 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
                 new Option("Settings", Config.Init),
                 new Option("Scoreboard", NotImplementedException)
                 );
+
+            Output.WriteOnBottomLine(ConsoleColor.Green, $"v {GameVersion}");
 
             menu.Display();
 
@@ -64,7 +66,7 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
         private static void NotImplementedException()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
             ScoreBoard score = new TopScoreBoard(
                 new PlayerScore("Kalle", 113, DateTime.Now),
                 new PlayerScore("Foo", 99, DateTime.Parse("2023-02-05 12:22:11"))
