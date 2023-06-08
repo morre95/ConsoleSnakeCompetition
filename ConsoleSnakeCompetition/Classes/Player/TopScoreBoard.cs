@@ -2,18 +2,18 @@
 {
     public class TopScoreBoard : ScoreBoard
     {
-        public int NumberOf
+        public int NumberOfScores
         {
             get; set;
         }
         public TopScoreBoard(params PlayerScore[] scores) : base(scores)
         {
-            NumberOf = 10;
+            NumberOfScores = 10;
         }
 
         public override List<PlayerScore> GetLeaderboard()
         {
-            return Repository.OrderByDescending(x => x.Score).Take(NumberOf).ToList();
+            return Repository.OrderByDescending(x => x.Score).Take(NumberOfScores).ToList();
         }
 
     }

@@ -19,7 +19,7 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 {
     internal class Game
     {
-        public static string GameVersion => string.Format("{0:00}.{1:00}.{2:0000}", 0, 0, 0001);
+        public static string GameVersion => string.Format("{0:00}.{1:00}.{2:0000}", 0, 0, 0010);
         public static void Init()
         {
             Console.Clear();
@@ -259,7 +259,7 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
         {
             grid.SetValue(goalX, goalY, '%');
             Console.SetCursorPosition(goalY, goalX);
-            Console.Write('%');
+            Output.Write(AppSettings.Instance.GetFoodColor(), '%');
         }
 
         private static void GenerateRandomXY(Grid<char> grid, out int x, out int y)
@@ -276,8 +276,8 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
         public static void WaitTermination()
         {
-            Console.Write("Press any key to terminate ...");
-            Console.ReadKey();
+            Console.Write("Press Enter to terminate ...");
+            Console.ReadLine();
         }
     }
 }

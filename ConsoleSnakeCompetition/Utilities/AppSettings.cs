@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
 
 namespace ConsoleSnakeCompetition.Utilities
@@ -10,8 +11,6 @@ namespace ConsoleSnakeCompetition.Utilities
         public static AppSettings Instance => instance.Value;
 
         private readonly string settingsFile = Path.GetFullPath("Resources/Settings/settings.xml");
-
-        public string GameName { get; set; } = "The Best Game";
 
         public int Speed { get; set; } = 50;
 
@@ -38,14 +37,28 @@ namespace ConsoleSnakeCompetition.Utilities
 
         public string ThemeColor { get; set; } = "Gray";
 
+        public string FoodColor { get; set; } = "Gray";
+
+
         private AppSettings()
         {
+
         }
 
         public int GetDelayMS()
         {
             var scaleStep = (MaxSpeedValue - MinSpeedValue) / (double)(StepStepCount - 1);
             return (int)(MaxSpeedValue - scaleStep * (Speed - 1));
+        }
+
+        public ConsoleColor GetFoodColor()
+        {
+            return ToEnum<ConsoleColor>(FoodColor);
+        }
+
+        public static T ToEnum<T>(string value)
+        {
+            return (T)Enum.Parse(typeof(T), value, true);
         }
 
         public void LoadSettings()
@@ -73,7 +86,25 @@ namespace ConsoleSnakeCompetition.Utilities
         private void CopyProperties(AppSettings other)
         {
             Speed = other.Speed;
+            BestOf = other.BestOf;
+
+            Player1Colorized = other.Player1Colorized;
+            Player1ColorInverted = other.Player1ColorInverted;
+            Player1Symbol = other.Player1Symbol;
+            Player1StartLength = other.Player1StartLength;
+
+            Player2Colorized = other.Player2Colorized;
+            Player2ColorInverted = other.Player2ColorInverted;
+            Player2Symbol = other.Player2Symbol;
+            Player2StartLength = other.Player2StartLength;
+
+            ComputerColorized = other.ComputerColorized;
+            ComputerColorInverted = other.ComputerColorInverted;
+            ComputerSymbol = other.ComputerSymbol;
+            ComputerStartLength = other.ComputerStartLength;
+
             ThemeColor = other.ThemeColor;
+            FoodColor = other.FoodColor;
         }
     }
 }

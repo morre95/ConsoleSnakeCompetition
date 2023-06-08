@@ -93,7 +93,8 @@ namespace ConsoleSnakeCompetition.Classes.Menu
             else
             {
                 Console.WriteLine("\nInvalid selection. Please try again");
-                Thread.Sleep(3000);
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey(true);
                 Display();
             }
         }

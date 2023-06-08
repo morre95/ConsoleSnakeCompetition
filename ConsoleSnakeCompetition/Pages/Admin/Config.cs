@@ -16,41 +16,76 @@ namespace ConsoleSnakeCompetition.Pages.Admin
         public static void Init()
         {
             Console.Clear();
-            // TBD: Kolla om det går att ta reda på vart Menu callas ifrån
-            // *: Om det går kalla du kan skicka tillbaka användaren hit vid fel index
             var menu = new Menu(
                 new Option("Home", Game.Init),
                 new Option("Game Speed", SetSpeed),
                 new Option("Best of", SetBestOf),
                 new Option("Theme Color", SelectThemeColor),
+                new Option("Food Color", SelectFoodColor),
                 new Option("Editor", GridEditor.Init)
                 );
             menu.SetPosition(0, 0);
             menu.Display();
         }
 
+        public static void SelectFoodColor()
+        {
+            var consoleColor = ParseColor(AppSettings.Instance.FoodColor);
+
+            AppSettings.Instance.FoodColor = SelectColor(consoleColor);
+            AppSettings.Instance.SaveSettings();
+
+            Init();
+        }
+
+        private static ConsoleColor ParseColor(string color)
+        {
+            ConsoleColor consoleColor;
+
+            if (!Enum.TryParse(color, out consoleColor))
+            {
+                Console.WriteLine("Invalid color, default color is used");
+                Console.WriteLine("Press Enter to continue...");
+                Console.ReadLine();
+                return Console.ForegroundColor;
+            }
+
+            return consoleColor;
+        }
+
         public static void SelectThemeColor()
         {
-            ConsoleColor[] colors = (ConsoleColor[]) ConsoleColor.GetValues(typeof(ConsoleColor));
 
-            //int currentIndex = 0;
             ConsoleColor consoleColor;
 
             if (!Enum.TryParse(AppSettings.Instance.ThemeColor, out consoleColor))
             {
                 Console.WriteLine("Invalid color, try again!");
-                Console.WriteLine("Press any key to continue...");
+                Console.WriteLine("Press Enter to continue...");
                 Console.ReadLine();
+                Init();
+                return;
             }
+
+
+            AppSettings.Instance.ThemeColor = SelectColor(consoleColor);
+            AppSettings.Instance.SaveSettings();
+
+            Init();
+        }
+
+        public static string SelectColor(ConsoleColor consoleColor)
+        {
+            ConsoleColor[] colors = (ConsoleColor[])ConsoleColor.GetValues(typeof(ConsoleColor));
+
             int currentIndex = Array.IndexOf(colors, consoleColor);
             bool colorSelected = false;
 
             ConsoleColor currentBackground = Console.BackgroundColor;
-            //ConsoleColor originalColor = Console.ForegroundColor;
 
             while (!colorSelected)
             {
-                
+
 
                 Console.Clear();
 
@@ -63,6 +98,7 @@ namespace ConsoleSnakeCompetition.Pages.Admin
                 switch (keyInfo.Key)
                 {
                     case ConsoleKey.LeftArrow:
+                    case ConsoleKey.DownArrow:
                         currentIndex = (currentIndex - 1 + colors.Length) % colors.Length;
                         if (colors[currentIndex] == currentBackground)
                         {
@@ -71,6 +107,7 @@ namespace ConsoleSnakeCompetition.Pages.Admin
                         }
                         break;
                     case ConsoleKey.RightArrow:
+                    case ConsoleKey.UpArrow:
                         currentIndex = (currentIndex + 1) % colors.Length;
                         if (colors[currentIndex] == currentBackground)
                         {
@@ -86,44 +123,50 @@ namespace ConsoleSnakeCompetition.Pages.Admin
                 }
             }
 
+            Console.Clear();
             Output.WriteLine(colors[currentIndex], $"You Selected: {colors[currentIndex]}");
-            Console.WriteLine("Press any key to continue...");
+            Console.WriteLine("Press Enter to continue...");
             Console.ReadLine();
 
-            AppSettings.Instance.ThemeColor = Enum.GetName(typeof(ConsoleColor), colors[currentIndex]);
-            AppSettings.Instance.SaveSettings();
-
-            Init();
+            return Enum.GetName(typeof(ConsoleColor), colors[currentIndex]);
         }
 
         private static void SetBestOf()
         {
-            int[] steps = { 3, 5, 7, 0 };
-            // FIXME: bestOf verkar inte skrivas över när man startar spelet. Men den gör det dock när man ändrar och gårt tillbaka hit
+            int[] steps = { 1, 3, 5, 7, 9, 0 };
             int currentIndex = Array.IndexOf(steps, AppSettings.Instance.BestOf);
+            bool indexSelected = false;
 
             Console.CursorVisible = false;
-            while (true)
+            while (!indexSelected)
             {
                 Console.Clear();
-                Console.WriteLine("Nuvarande värde: " + steps[currentIndex]);
-                Console.WriteLine("Select with arrow key and enter to select");
+                Console.WriteLine($"Current value: {steps[currentIndex]}");
+                Console.WriteLine("Select with arrow key and enter to select. 0 = ~infinity");
 
                 var key = Console.ReadKey().Key;
 
-                if (key == ConsoleKey.UpArrow)
+                switch (key)
                 {
-                    currentIndex = (currentIndex + 1) % steps.Length;
-                }
-                else if (key == ConsoleKey.DownArrow)
-                {
-                    currentIndex = (currentIndex - 1 + steps.Length) % steps.Length;
-                }
-                else if(key == ConsoleKey.Enter)
-                {
-                    break;
+                    case ConsoleKey.LeftArrow:
+                    case ConsoleKey.DownArrow:
+                        currentIndex = (currentIndex - 1 + steps.Length) % steps.Length;
+                        break;
+                    case ConsoleKey.UpArrow:
+                    case ConsoleKey.RightArrow:
+                        currentIndex = (currentIndex + 1) % steps.Length;
+                        break;
+                    case ConsoleKey.Enter:
+                        indexSelected = true;
+                        break;
+
                 }
             }
+
+            Console.Clear();
+            Console.WriteLine($"You Selected: {steps[currentIndex]}");
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadLine();
 
             AppSettings.Instance.BestOf = steps[currentIndex];
             AppSettings.Instance.SaveSettings();
@@ -156,6 +199,11 @@ namespace ConsoleSnakeCompetition.Pages.Admin
                     break;
                 }
             }
+
+            Console.Clear();
+            Console.WriteLine($"You Selected: {selectedValue}");
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadLine();
 
             AppSettings.Instance.Speed = selectedValue;
 
