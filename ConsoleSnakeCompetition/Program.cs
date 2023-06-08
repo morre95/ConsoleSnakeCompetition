@@ -47,7 +47,14 @@ namespace ConsoleSnakeCompetition
 
             AppSettings.Instance.LoadSettings();
 
-            Game.Init();
+            try
+            {
+                Game.Init();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
         }
 
         
