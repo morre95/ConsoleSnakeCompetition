@@ -25,6 +25,7 @@ namespace ConsoleSnakeCompetition
             //Tests();
             //return;
 
+            // TBD: Skapandet av katalog struktur här bör flyttas ut tull en Setup klass
             string directoryPath = Path.GetFullPath(@"Resources"); ;
 
             if (!Directory.Exists(directoryPath))
@@ -49,6 +50,8 @@ namespace ConsoleSnakeCompetition
             Game.Init();
         }
 
+        
+        // TBD: Bör raderas
         private void testProp()
         {
             // INFO: Gör detta till något som spånar in samtidigt som ny mat för att göra spelet med utmanande
@@ -100,6 +103,7 @@ namespace ConsoleSnakeCompetition
             Console.WriteLine($"4 = {(double)fours / times * 100}%, {fours} time");
         }
 
+        // TBD: Bör radderas
         // INFO: Test körning av Output klassen och Logger och Log klasserna
         private static void Tests()
         {
@@ -132,10 +136,11 @@ namespace ConsoleSnakeCompetition
             new Logger<AppSettings>().Success("Yes det funkade");
 
             Logger<Menu>.Instance.Debug("Debug message");
-
-            Log.Error("Error");
-            Log.Debug("Debug", "Foo", "Bar", 1, 2, 'E');
-            Log.Success("Debuga mig");
+            
+            Log.Error("Error 123");
+            Log.Debug("Debug 123", "Foo", "Bar", 1, 2, 'E');
+            Log.ConsoleOutput = true;
+            Log.Success("Debuga mig, och skriv ut");
         }
     }
 }
