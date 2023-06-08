@@ -22,8 +22,8 @@ namespace ConsoleSnakeCompetition
             //Grid<char> gridList = GridEditor.PopulateEmptyGrid(22, 88);
             //GridEditor.RunEditor(gridList);
 
-            Tests();
-            return;
+            //Tests();
+            //return;
 
             // TBD: Skapandet av katalog struktur här bör flyttas ut tull en Setup klass
             string directoryPath = Path.GetFullPath(@"Resources"); ;
@@ -130,6 +130,15 @@ namespace ConsoleSnakeCompetition
             logger.Warn("Värdet måste varnas");
             logger.Error("Error");
 
+            try
+            {
+                throw new InvalidOperationException();
+            }
+            catch (InvalidOperationException e)
+            {
+                logger.Error(e);
+            }
+
             var sLogger = new Logger<Snake>();
             sLogger.Trace("Trace the snake");
             new Logger<Menu>().Debug("Nu debuggar vi menu");
@@ -142,6 +151,15 @@ namespace ConsoleSnakeCompetition
             Log.ConsoleOutput = true;
             Log.Success("Debuga mig, och skriv ut");
             Log.Trace("Where is the snake, trace it if you find it");
+            Log.ConsoleOutput = false;
+            try
+            {
+                throw new InvalidOperationException("I don't whant this to be printed");
+            }
+            catch (InvalidOperationException e)
+            {
+                Log.Error(e);
+            }
         }
     }
 }
