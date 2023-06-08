@@ -13,7 +13,7 @@ namespace ConsoleSnakeCompetition.Pages.Admin
 {
     internal static class GridEditor
     {
-
+        // TBD: fixa så det går att ta sig tillbaka till menyn
         public static void Init()
         {
             (int rows, int columns) = SelectRowsAndColumns();
