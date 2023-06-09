@@ -19,7 +19,12 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 {
     internal class Game
     {
-        public static string GameVersion => string.Format("{0:00}.{1:00}.{2:0000}", 0, 0, 0010);
+        private const int _major = 0;
+        private const int _minor = 0;
+        private const int _patch = 1500;
+
+        public static string GameVersion => string.Format("{0:00}.{1:00}.{2:0000}", _major, _minor, _patch);
+
         public static void Init()
         {
             Console.Clear();
@@ -38,7 +43,7 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
             Menu menu = new Menu(
                 new Option("Start"),
                 new Option("Settings", Config.Init),
-                new Option("Scoreboard", NotImplementedException)
+                new Option("Score Board", ScoreBoard)
                 );
 
             Output.WriteOnBottomLine(ConsoleColor.Green, $"v {GameVersion}");
@@ -64,14 +69,10 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
             Run(grid, AppSettings.Instance.GetDelayMS());
         }
 
-        private static void NotImplementedException()
+        private static void ScoreBoard()
         {
-            //throw new NotImplementedException();
-            ScoreBoard score = new TopScoreBoard(
-                new PlayerScore("Kalle", 113, DateTime.Now),
-                new PlayerScore("Foo", 99, DateTime.Parse("2023-02-05 12:22:11"))
-                
-                );
+            ScoreBoard score = new TopScoreBoard();
+            score.Load();
 
             Console.Clear();
             Console.WriteLine(score);
@@ -223,6 +224,22 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
             {
                 Console.WriteLine("Congrats you won");
                 Console.WriteLine($"Score: (you/computer) {score}/{computerScore}");
+
+                ScoreBoard scoreBoard = new TopScoreBoard();
+                scoreBoard.Load();
+
+                var newScore = new PlayerScore("Player1", score, DateTime.Now);
+                if (scoreBoard.IsHighScoreWorthy(newScore))
+                {
+                    newScore.PlayerName = Output.ReadLine(ConsoleColor.Yellow, "New High Score: ");
+
+                    scoreBoard.Add(newScore);
+                    scoreBoard.Save();
+                    // TBD: Highlighta den nyligen tillagda topp poängen
+                    ScoreBoard();
+                    return;
+                }
+
             }
             else if (score == computerScore)
             {

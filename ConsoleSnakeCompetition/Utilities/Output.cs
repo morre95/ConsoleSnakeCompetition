@@ -55,6 +55,19 @@
             Console.SetCursorPosition(x, y);
         }
 
+
+        public static string ReadLine(string text)
+        {
+            Console.Write(text);
+            return Console.ReadLine();
+        }
+
+        public static string ReadLine(ConsoleColor color, string text)
+        {
+            Write(color, text);
+            return Console.ReadLine();
+        }
+
     }
 }
 
