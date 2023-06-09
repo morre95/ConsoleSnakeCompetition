@@ -124,8 +124,8 @@ namespace ConsoleSnakeCompetition.Classes.Player
         public override string ToString()
         {
             var tb = new TableBuilder();
-            tb.AddRow("#", "Name", "Score", "When");
-            tb.AddRow("--", "----", "-----", "-----------");
+            tb.AddRow("#",  "Name",     "Score", "When");
+            tb.AddRow("--", "--------", "-----", "-------------------");
             var i = 1;
             foreach (var score in GetLeaderboard())
             {

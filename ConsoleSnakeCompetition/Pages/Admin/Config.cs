@@ -5,11 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ConsoleSnakeCompetition.Classes.Menu;
+using ConsoleSnakeCompetition.Classes.Player;
 using ConsoleSnakeCompetition.Pages.GamePlay;
 using ConsoleSnakeCompetition.Utilities;
 
 namespace ConsoleSnakeCompetition.Pages.Admin
 {
+
     internal class Config
     {
 
@@ -22,10 +24,27 @@ namespace ConsoleSnakeCompetition.Pages.Admin
                 new Option("Best of", SetBestOf),
                 new Option("Theme Color", SelectThemeColor),
                 new Option("Food Color", SelectFoodColor),
-                new Option("Editor", GridEditor.Init)
+                new Option("Editor", GridEditor.Init),
+                new Option("Remove scores", RemoveAllScores)
                 );
             menu.SetPosition(0, 0);
             menu.Display();
+        }
+
+        public static void RemoveAllScores()
+        {
+            Console.Clear();
+            if (UtilsConsole.Confirm("Remove all scores?"))
+            {
+                ScoreBoard score = new TopScoreBoard();
+                score.Save();
+                Console.WriteLine("All scores are removed");
+            }
+
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadLine();
+
+            Init();
         }
 
         public static void SelectFoodColor()
