@@ -11,7 +11,6 @@ namespace ConsoleSnakeCompetition
     internal class Program
     {
         
-        // TODO: lägg till highscore
         // TODO: Lägg till så att computern går snabbare och snabbare vid oändligt många ronder och kanske också vid de andra bestOf valen
 
         // TBD:    Nedanstående
