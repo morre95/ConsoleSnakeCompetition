@@ -9,6 +9,8 @@ using ConsoleSnakeCompetition.Classes.Player;
 using ConsoleSnakeCompetition.Pages.GamePlay;
 using ConsoleSnakeCompetition.Utilities;
 
+using ConsoleSnakeCompetition.Utilities.Logging;
+
 namespace ConsoleSnakeCompetition.Pages.Admin
 {
 
@@ -63,6 +65,7 @@ namespace ConsoleSnakeCompetition.Pages.Admin
 
             if (!Enum.TryParse(color, out consoleColor))
             {
+                Log.Error("Invalid color, default color is used");
                 Console.WriteLine("Invalid color, default color is used");
                 Console.WriteLine("Press Enter to continue...");
                 Console.ReadLine();
@@ -74,18 +77,7 @@ namespace ConsoleSnakeCompetition.Pages.Admin
 
         public static void SelectThemeColor()
         {
-
-            ConsoleColor consoleColor;
-
-            if (!Enum.TryParse(AppSettings.Instance.ThemeColor, out consoleColor))
-            {
-                Console.WriteLine("Invalid color, try again!");
-                Console.WriteLine("Press Enter to continue...");
-                Console.ReadLine();
-                Init();
-                return;
-            }
-
+            var consoleColor = ParseColor(AppSettings.Instance.ThemeColor);
 
             AppSettings.Instance.ThemeColor = SelectColor(consoleColor);
             AppSettings.Instance.SaveSettings();
