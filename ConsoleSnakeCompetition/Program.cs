@@ -10,7 +10,7 @@ namespace ConsoleSnakeCompetition
 {
     internal class Program
     {
-        
+        // TODO: Gör det möjligt så att ormen inte kan äta sig själv med snake.IsEatingPart(dir) eller att man förlorar när man äter sig själv
         // TODO: Lägg till så att computern går snabbare och snabbare vid oändligt många ronder och kanske också vid de andra bestOf valen
 
         // TBD:    Nedanstående

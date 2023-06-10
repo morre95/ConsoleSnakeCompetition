@@ -143,6 +143,34 @@ namespace ConsoleSnakeCompetition.Classes.Snake
         {
             return Head.Position.Y;
         }
+
+        public int GetXAhead(Direction direction)
+        {
+            var ahead = 0;
+            if (direction == Direction.Up) ahead = -1;
+            else if (direction == Direction.Down) ahead = 1;
+            return Head.Position.X + ahead;
+        }
+
+        public int GetYAhead(Direction direction)
+        {
+            var ahead = 0;
+            if (direction == Direction.Left) ahead = -1;
+            else if (direction == Direction.Right) ahead = 1;
+            return Head.Position.Y + ahead;
+        }
+
+        public bool IsEatingPart(Direction direction)
+        {
+            foreach (var part in _body.Skip(1))
+            {
+                if (GetXAhead(direction) == part.Position.X && GetYAhead(direction) == part.Position.Y)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
 
