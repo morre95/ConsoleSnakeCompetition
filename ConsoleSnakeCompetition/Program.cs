@@ -10,7 +10,8 @@ namespace ConsoleSnakeCompetition
 {
     internal class Program
     {
-        // TODO: Gör det möjligt så att ormen inte kan äta sig själv med snake.IsEatingPart(dir) eller att man förlorar när man äter sig själv
+        // TODO: Gör det möjligt så att ändra i inställningarna vad som händer om man försöker äta sig själv. Hint kolla efter if (snake.IsEatingPart(Snake.Direction.Up)) ReduceLength(1);
+        // TBD: Kolla om det går att använda GetXYAhead(bool) till något
         // TODO: Lägg till så att computern går snabbare och snabbare vid oändligt många ronder och kanske också vid de andra bestOf valen
 
         // TBD:    Nedanstående

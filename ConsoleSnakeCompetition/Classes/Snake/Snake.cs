@@ -18,7 +18,7 @@ namespace ConsoleSnakeCompetition.Classes.Snake
 
         public Direction CurrentDirection
         {
-            get; set;
+            get; private set;
         }
 
         private SnakePart[] _body;
@@ -170,6 +170,32 @@ namespace ConsoleSnakeCompetition.Classes.Snake
                 }
             }
             return false;
+        }
+
+        public Dictionary<Direction, int> GetXYAhead(bool removeCurrentDirection = true)
+        {
+            var dict = new Dictionary<Direction, int> {
+                { Direction.Up, Head.Position.X + -1},
+                { Direction.Down, Head.Position.X + 1},
+                { Direction.Left, Head.Position.Y + -1 },
+                { Direction.Right, Head.Position.Y + 1 }
+            };
+
+            if (removeCurrentDirection) { dict.Remove(CurrentDirection); }
+
+            return dict;
+        }
+
+        public void ReduceLength(int length)
+        {
+            if (_body.Length <= length)
+            {
+                return;
+            }
+
+            Erase();
+            Array.Resize(ref _body, _body.Length - length);
+            Draw();
         }
     }
 }

@@ -135,7 +135,7 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
             int bestOfRounds = AppSettings.Instance.BestOf == 0 ? int.MaxValue : AppSettings.Instance.BestOf;
 
-            while (score + computerScore < bestOfRounds)
+            while (score + computerScore < bestOfRounds && (score < bestOfRounds) && (computerScore < bestOfRounds))
             {
 
                 if (Console.KeyAvailable)
@@ -148,22 +148,63 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
                         case ConsoleKey.W:
                         case ConsoleKey.UpArrow:
                             if (grid.GetValue(snake.GetX() - 1, snake.GetY()) != '*')
-                                snake.Move(Snake.Direction.Up);
+                            {
+                                if (!snake.IsEatingPart(Snake.Direction.Up))
+                                {
+                                    snake.Move(Snake.Direction.Up);
+                                }
+                                else
+                                {
+                                    snake.ReduceLength(1);
+                                    score--;
+                                }
+                            }
+                                
                             break;
                         case ConsoleKey.S:
                         case ConsoleKey.DownArrow:
                             if (grid.GetValue(snake.GetX() + 1, snake.GetY()) != '*')
-                                snake.Move(Snake.Direction.Down);
+                            {
+                                if (!snake.IsEatingPart(Snake.Direction.Down))
+                                {
+                                    snake.Move(Snake.Direction.Down);
+                                }
+                                else
+                                {
+                                    snake.ReduceLength(1);
+                                    score--;
+                                }
+                            }
                             break;
                         case ConsoleKey.A:
                         case ConsoleKey.LeftArrow:
                             if (grid.GetValue(snake.GetX(), snake.GetY() - 1) != '*')
-                                snake.Move(Snake.Direction.Left);
+                            {
+                                if (!snake.IsEatingPart(Snake.Direction.Left))
+                                {
+                                    snake.Move(Snake.Direction.Left);
+                                }
+                                else
+                                {
+                                    snake.ReduceLength(1);
+                                    score--;
+                                }
+                            }
                             break;
                         case ConsoleKey.D:
                         case ConsoleKey.RightArrow:
                             if (grid.GetValue(snake.GetX(), snake.GetY() + 1) != '*')
-                                snake.Move(Snake.Direction.Right);
+                            {
+                                if (!snake.IsEatingPart(Snake.Direction.Right))
+                                {
+                                    snake.Move(Snake.Direction.Right);
+                                }
+                                else
+                                {
+                                    snake.ReduceLength(1);
+                                    score--;
+                                }
+                            }
                             break;
                     }
 
@@ -177,10 +218,7 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
                         path = AStar.Search(grid, currentX, currentY, goalX, goalY);
 
                         snake.AddLength(1);
-
-                        Console.SetCursorPosition(0, grid.RowCount() + 1);
                         score++;
-                        Console.Write($"Score: (you/computer) {score}/{computerScore}");
                     }
                 }
 
@@ -205,12 +243,11 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
                         path = AStar.Search(grid, currentX, currentY, goalX, goalY);
                         computer.AddLength(1);
-
-                        Console.SetCursorPosition(0, grid.RowCount() + 1);
-                        computerScore++;
-                        Console.Write($"Score: (you/computer) {score}/{computerScore}");
+                        computerScore++; 
                     }
                 }
+                Console.SetCursorPosition(0, grid.RowCount() + 1);
+                Console.Write($"Score: (you/computer) {score}/{computerScore}");
             }
 
             Console.Clear();
