@@ -9,16 +9,25 @@ namespace ConsoleSnakeCompetition.Utilities.Logging
 
         private readonly string executionPath = Path.GetFullPath("Resources/Logging/");
 
-        public static Logger<TClass> Instance => new Logger<TClass>();
+        public string ClassName => _className.FullName!;
 
-        public string ClassName => _className.FullName;
+        private bool _consoleOutput;
 
-        public bool ConsoleOutput { get; set; }
+        public bool ConsoleOutput 
+        { 
+            get => _consoleOutput; 
+            set => _consoleOutput = value;  
+        }
 
-        public Logger()
+        // FIXME: Logger<Foo>.Instance och Logger<Bar>.Instance genererar inte samma instans
+        private static readonly Lazy<Logger<TClass>> instance = new Lazy<Logger<TClass>>(() => new Logger<TClass>());
+
+        public static Logger<TClass> Instance => instance.Value;
+
+        private Logger()
         {
             _className = typeof(TClass);
-            ConsoleOutput = false;
+            _consoleOutput = false;
         }
 
         public void Trace(string message, params object[] args)
