@@ -66,7 +66,7 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
             Console.Clear();
 
 
-            Run(grid, AppSettings.Instance.GetDelayMS());
+            Run(grid);
         }
 
         private static void ScoreBoard()
@@ -81,7 +81,7 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
         }
 
 
-        static void Run(Grid<char> grid, int delayMS)
+        static void Run(Grid<char> grid)
         {
             ConsoleColor consoleColor;
 
@@ -133,10 +133,33 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
             Console.CursorVisible = false;
 
+            int delayMS = AppSettings.Instance.GetDelayMS();
+
             int bestOfRounds = AppSettings.Instance.BestOf == 0 ? int.MaxValue : AppSettings.Instance.BestOf;
+
+            var totalTime = SetInterval(() => delayMS -= 20, 1000 * 60); // Every minute speed up
 
             while (score + computerScore < bestOfRounds && (score < bestOfRounds) && (computerScore < bestOfRounds))
             {
+                if (snake.Length <= 1) 
+                { 
+                    /*int x = snake.GetX();
+                    int y = snake.GetY();
+                    for (int i = 0; i < 5; i++)
+                    {
+                        Console.SetCursorPosition(y, x);
+                        Output.Write(ConsoleColor.Red, '#');
+                        Console.SetCursorPosition(y, x);
+
+                        Thread.Sleep(500);
+                        Console.Write(" ");
+                        Thread.Sleep(500);
+                    }*/
+
+                    snake.Loose();
+
+                    break; 
+                }
 
                 if (Console.KeyAvailable)
                 {
@@ -246,9 +269,14 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
                         computerScore++; 
                     }
                 }
+
                 Console.SetCursorPosition(0, grid.RowCount() + 1);
-                Console.Write($"Score: (you/computer) {score}/{computerScore}");
+                Console.Write($"Score: (you/computer) {score}/{computerScore}, delayMS = {delayMS}");
+
             }
+
+            totalTime.Dispose();
+
 
             Console.Clear();
             // TBD: Infinity symbolen ser ut som en 8 när man skriver ut den
@@ -257,6 +285,9 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
             string bestOfStr = bestOfRounds.ToString();
             Console.WriteLine($"Best of: {bestOfStr}");
+
+            if(snake.Length <= 1) { Console.WriteLine("You eat your self to death"); }
+
             if (score > computerScore)
             {
                 Console.WriteLine("Congrats you won");
@@ -291,6 +322,17 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
             WaitTermination();
             Init();
+        }
+
+        public static System.Timers.Timer SetInterval(Action Act, int Interval)
+        {
+            System.Timers.Timer tmr = new System.Timers.Timer();
+            tmr.Elapsed += (sender, args) => Act();
+            tmr.AutoReset = true;
+            tmr.Interval = Interval;
+            tmr.Start();
+
+            return tmr;
         }
 
         private static void DrawGrid(Grid<char> grid, ConsoleColor consoleColor)

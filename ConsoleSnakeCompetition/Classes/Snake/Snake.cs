@@ -24,6 +24,7 @@ namespace ConsoleSnakeCompetition.Classes.Snake
         private SnakePart[] _body;
         private SnakePart Head => _body.First();
         private SnakePart Tail => _body.Last();
+        public int Length => _body.Length;
 
         private bool _drawColorized;
 
@@ -196,6 +197,17 @@ namespace ConsoleSnakeCompetition.Classes.Snake
             Erase();
             Array.Resize(ref _body, _body.Length - length);
             Draw();
+        }
+
+        public void Loose()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                Erase();
+                Thread.Sleep(500);
+                Draw();
+                Thread.Sleep(500);
+            }
         }
     }
 }
