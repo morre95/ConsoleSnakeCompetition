@@ -20,15 +20,20 @@ namespace ConsoleSnakeCompetition.Utilities
         public int MaxSpeedValue { get; set; } = 1000;
         public int StepStepCount { get; set; } = 100;
 
+        public string Player1Name { get; set; } = string.Empty;
         public bool Player1Colorized { get; set; } = true;
         public bool Player1ColorInverted { get; set; } = false;
         public char Player1Symbol { get; set; } = '#';
         public int Player1StartLength { get; set; } = 5;
+        public bool Player1DieWhenEaten { get; set; } = true;
+         
 
+        public string Player2Name { get; set; } = string.Empty;
         public bool Player2Colorized { get; set; } = true;
         public bool Player2ColorInverted { get; set; } = true;
         public char Player2Symbol { get; set; } = '&';
         public int Player2StartLength { get; set; } = 5;
+        public bool Player2DieWhenEaten { get; set; } = true;
 
         public bool ComputerColorized { get; set; } = false;
         public bool ComputerColorInverted { get; set; } = false;
