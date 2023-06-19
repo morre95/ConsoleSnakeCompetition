@@ -23,6 +23,7 @@ namespace ConsoleSnakeCompetition.Pages.Admin
             var menu = new Menu(
                 new Option("Home", Game.Init),
                 new Option("Game Speed", SetSpeed),
+                new Option("Computer Speed", SetComputerSpeed),
                 new Option("Best of", SetBestOf),
                 new Option("Theme Color", SelectThemeColor),
                 new Option("Food Color", SelectFoodColor),
@@ -180,6 +181,42 @@ namespace ConsoleSnakeCompetition.Pages.Admin
             Console.ReadLine();
 
             AppSettings.Instance.BestOf = steps[currentIndex];
+            AppSettings.Instance.SaveSettings();
+            Init();
+        }
+
+        private static void SetComputerSpeed()
+        {
+            var selectedValue = AppSettings.Instance.IncreaseSpeedEvery;
+            Console.CursorVisible = false;
+            do
+            {
+                Console.Clear();
+                Console.Write($"Increase Speed Every: {selectedValue} sec");
+                var key = Console.ReadKey(true).Key;
+                if (key == ConsoleKey.UpArrow)
+                {
+                    selectedValue++;
+                }
+                else if (key == ConsoleKey.DownArrow)
+                {
+                    selectedValue--;
+                    if (selectedValue < 1) { selectedValue = 1; }
+                }
+                else if (key == ConsoleKey.Enter)
+                {
+                    break;
+                }
+
+            } while (true);
+
+            Console.Clear();
+            Console.WriteLine($"Every {selectedValue} sec the speed of the game will increase");
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadLine();
+
+            AppSettings.Instance.Speed = selectedValue;
+
             AppSettings.Instance.SaveSettings();
             Init();
         }

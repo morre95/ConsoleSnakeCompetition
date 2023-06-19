@@ -14,6 +14,8 @@ namespace ConsoleSnakeCompetition.Utilities
 
         public int Speed { get; set; } = 50;
 
+        public int IncreaseSpeedEvery { get; set; } = 120;
+
         public int BestOf { get; set; } = 3;
 
         public int MinSpeedValue { get; set; } = 1;

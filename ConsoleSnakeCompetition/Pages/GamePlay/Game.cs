@@ -137,7 +137,7 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
             int bestOfRounds = AppSettings.Instance.BestOf == 0 ? int.MaxValue : AppSettings.Instance.BestOf;
 
-            var totalTime = SetInterval(() => delayMS -= 20, 1000 * 60); // Every minute speed up
+            var totalTime = SetInterval(() => delayMS += delayMS >= AppSettings.Instance.MinSpeedValue ? -20 : 0, 1000 * AppSettings.Instance.IncreaseSpeedEvery);
 
             while (score + computerScore < bestOfRounds && (score < bestOfRounds) && (computerScore < bestOfRounds))
             {
