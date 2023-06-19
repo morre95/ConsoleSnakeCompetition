@@ -13,7 +13,6 @@ namespace ConsoleSnakeCompetition.Pages.Admin
 {
     internal static class GridEditor
     {
-        // TBD: fixa så det går att ta sig tillbaka till menyn
         public static void Init()
         {
             (int rows, int columns) = SelectRowsAndColumns();
@@ -209,6 +208,11 @@ namespace ConsoleSnakeCompetition.Pages.Admin
                     gridRows = rows;
                     gridColumns = columns;
                     gridList = ResizeGridList(gridList, rows, columns);
+                }
+                else if (keyInfo.Key == ConsoleKey.Escape) 
+                {
+                    Config.Init();
+                    return;
                 }
 
                 ClearScreen();

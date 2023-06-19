@@ -53,7 +53,6 @@ namespace ConsoleSnakeCompetition.Utilities.Logging
                 { "ERROR", LoggerColor.Error }
             };
 
-            // TBD: Bör kanske vara något annat än Program
             var instance = Logger<Program>.Instance;
             instance.ConsoleOutput = _consoleOutput;
             instance.Log(message, dict[level], callingClassName, args);

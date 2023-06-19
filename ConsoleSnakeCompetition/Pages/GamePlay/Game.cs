@@ -142,22 +142,8 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
             while (score + computerScore < bestOfRounds && (score < bestOfRounds) && (computerScore < bestOfRounds))
             {
                 if (snake.Length <= 1) 
-                { 
-                    /*int x = snake.GetX();
-                    int y = snake.GetY();
-                    for (int i = 0; i < 5; i++)
-                    {
-                        Console.SetCursorPosition(y, x);
-                        Output.Write(ConsoleColor.Red, '#');
-                        Console.SetCursorPosition(y, x);
-
-                        Thread.Sleep(500);
-                        Console.Write(" ");
-                        Thread.Sleep(500);
-                    }*/
-
+                {
                     snake.Loose();
-
                     break; 
                 }
 
@@ -279,9 +265,6 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
 
             Console.Clear();
-            // TBD: Infinity symbolen ser ut som en 8 när man skriver ut den
-            //string infinitySymbol = "\u221E";
-            //string bestOfStr = AppSettings.Instance.BestOf == 0 ? $"{infinitySymbol}, total rounds: {score + computerScore}" : AppSettings.Instance.BestOf.ToString();
 
             string bestOfStr = bestOfRounds.ToString();
             Console.WriteLine($"Best of: {bestOfStr}");
@@ -303,7 +286,6 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
                     scoreBoard.Add(newScore);
                     scoreBoard.Save();
-                    // TBD: Highlighta den nyligen tillagda topp poängen
                     ScoreBoard();
                     return;
                 }
@@ -347,7 +329,6 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
                 toPrint += "\n";
             }
             
-            //Console.WriteLine(toPrint);
             Output.WriteLine(consoleColor, toPrint);
         }
 
