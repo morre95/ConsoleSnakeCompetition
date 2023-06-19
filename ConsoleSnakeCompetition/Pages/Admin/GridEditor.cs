@@ -145,7 +145,6 @@ namespace ConsoleSnakeCompetition.Pages.Admin
 
                     while (true)
                     {
-                        //Console.Clear();
                         ClearScreen();
 
                         Console.WriteLine(fields[currentIndex]);
@@ -216,7 +215,6 @@ namespace ConsoleSnakeCompetition.Pages.Admin
                 }
 
                 ClearScreen();
-                //Console.SetCursorPosition(y, x);
                 DrawGrid(gridList, x, y);
             }
         }
@@ -301,7 +299,6 @@ namespace ConsoleSnakeCompetition.Pages.Admin
 
             while (true)
             {
-                //Console.Clear();
                 ClearScreen();
 
                 Console.WriteLine($"File > {Path.GetFileName(allJsonFIles[index]).Replace(".json", "")}");

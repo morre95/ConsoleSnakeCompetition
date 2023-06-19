@@ -114,7 +114,6 @@ namespace ConsoleSnakeCompetition.Pages.Admin
                         currentIndex = (currentIndex - 1 + colors.Length) % colors.Length;
                         if (colors[currentIndex] == currentBackground)
                         {
-                            // To jump over index 0, That is black, the same as background
                             currentIndex += currentIndex <= 0 ? colors.Length - 1 : -1;
                         }
                         break;

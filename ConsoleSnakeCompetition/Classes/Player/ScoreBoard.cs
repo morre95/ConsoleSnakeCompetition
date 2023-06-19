@@ -58,7 +58,6 @@ namespace ConsoleSnakeCompetition.Classes.Player
                 return;
             }
 
-            // Hitta den lägsta poängen
             int lowestScore = GetLeaderboard()[0].Score;
             foreach (PlayerScore score in Repository)
             {
@@ -68,7 +67,6 @@ namespace ConsoleSnakeCompetition.Classes.Player
                 }
             }
 
-            // Ta bort det första objektet med lägsta poängen
             for (int i = 0; i < Repository.Count; i++)
             {
                 if (Repository[i].Score == lowestScore)

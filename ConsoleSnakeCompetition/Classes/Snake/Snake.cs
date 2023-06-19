@@ -9,36 +9,25 @@ namespace ConsoleSnakeCompetition.Classes.Snake
             Up, Down, Left, Right
         }
 
-        public char Symbol
-        {
-            get; private set;
-        }
+        public char Symbol { get; private set; }
 
         public readonly char[] BodyTailSymbols = new char[4] { '^', 'v', '<', '>' };
 
-        public Direction CurrentDirection
-        {
-            get; private set;
-        }
+        public Direction CurrentDirection { get; private set; }
 
         private SnakePart[] _body;
-        private SnakePart Head => _body.First();
-        private SnakePart Tail => _body.Last();
+        public SnakePart Head => _body.First();
+        public SnakePart Tail => _body.Last();
         public int Length => _body.Length;
 
-        private bool _drawColorized;
-
-        public bool DrawColorized => _drawColorized;
-
-        private bool _colorInverted;
-
-        public bool ColorInverted => _colorInverted;
+        public bool DrawColorized { get; private set; }
+        public bool ColorInverted { get; private set; }
 
         public Snake(Point startingPoint, int length, char symbol = '#', bool drawColorized = false, bool colorInverted = false)
         {
             Symbol = symbol;
-            _drawColorized = drawColorized;
-            _colorInverted = colorInverted;
+            DrawColorized = drawColorized;
+            ColorInverted = colorInverted;
 
             _body = Enumerable
                 .Range(0, length)
@@ -50,7 +39,7 @@ namespace ConsoleSnakeCompetition.Classes.Snake
         {
             foreach (var snakePart in _body)
             {
-                if (_drawColorized) snakePart.DrawColorized(ColorInverted);
+                if (DrawColorized) snakePart.DrawColorized(ColorInverted);
                 else snakePart.Draw();
             }
         }
@@ -176,8 +165,8 @@ namespace ConsoleSnakeCompetition.Classes.Snake
         public Dictionary<Direction, int> GetXYAhead(bool removeCurrentDirection = true)
         {
             var dict = new Dictionary<Direction, int> {
-                { Direction.Up, Head.Position.X + -1},
-                { Direction.Down, Head.Position.X + 1},
+                { Direction.Up, Head.Position.X + -1 },
+                { Direction.Down, Head.Position.X + 1 },
                 { Direction.Left, Head.Position.Y + -1 },
                 { Direction.Right, Head.Position.Y + 1 }
             };
