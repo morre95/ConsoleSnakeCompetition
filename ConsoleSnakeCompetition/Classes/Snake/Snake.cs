@@ -162,18 +162,35 @@ namespace ConsoleSnakeCompetition.Classes.Snake
             return false;
         }
 
-        public Dictionary<Direction, int> GetXYAhead(bool removeCurrentDirection = true)
+        public Dictionary<Direction, int> GetXYAhead(bool removeOppositeDirection = true)
         {
             var dict = new Dictionary<Direction, int> {
-                { Direction.Up, Head.Position.X + -1 },
-                { Direction.Down, Head.Position.X + 1 },
+                { Direction.Up, Head.Position.X + -1},
+                { Direction.Down, Head.Position.X + 1},
                 { Direction.Left, Head.Position.Y + -1 },
                 { Direction.Right, Head.Position.Y + 1 }
             };
 
-            if (removeCurrentDirection) { dict.Remove(CurrentDirection); }
+            if (removeOppositeDirection) { dict.Remove(GetOppositeDirection()); }
 
             return dict;
+        }
+
+        private Direction GetOppositeDirection()
+        {
+            switch (CurrentDirection)
+            {
+                case Direction.Up:
+                    return Direction.Down;
+                case Direction.Down:
+                    return Direction.Up;
+                case Direction.Left:
+                    return Direction.Right;
+                case Direction.Right:
+                    return Direction.Left;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public void ReduceLength(int length)
