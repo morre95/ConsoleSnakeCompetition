@@ -54,7 +54,9 @@ namespace ConsoleSnakeCompetition.Classes.Snake
                 if (DrawColorized) snakePart.DrawColorized(ColorInverted);
                 else snakePart.Draw();
             }
-            Head.Draw();
+
+            if (DrawColorized) Head.DrawColorized(ColorInverted);
+            else Head.Draw();
         }
 
         public void Erase()

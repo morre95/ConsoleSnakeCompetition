@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using ConsoleSnakeCompetition.Classes.Game;
 using ConsoleSnakeCompetition.Classes.Snake;
 using ConsoleSnakeCompetition.Utilities;
@@ -33,21 +34,24 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
             // FIXME: Fortstätt att porta över från enbart top, left cords till Grid<char> x, y
             Grid<char> grid = Load.PopulateEmptyGrid(rows, cols);
 
-            DrawGrid(grid, ConsoleColor.Green);
+            DrawGrid(grid, ConsoleColor.Magenta);
 
 
-            var snake1 = new Snake(new Point(11, 11), 30);
+            var snake1 = new Snake(new Point(1, 1), 5);
             snake1.Draw();
 
-            var snake2 = new Snake(new Point(15, 15), 30, drawColorized: true);
+            var snake2 = new Snake(new Point(rows - 2, cols - 2), 5, drawColorized: true);
             snake2.Draw();
 
             int goalRow, goalCol, goalPoint;
-            SpawnRandomFood(rows, cols, out goalRow, out goalCol, out goalPoint);
+            SpawnRandomFood(grid, rows, cols, out goalRow, out goalCol, out goalPoint);
 
             Console.CursorVisible = false;
             ConsoleKey key;
             int i = 0;
+
+            int snake1Score = 0;
+            int snake2Score = 0;
 
             while (true)
             {
@@ -64,143 +68,178 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
                 }
 
                 key = Console.ReadKey(true).Key;
+
+                if (key == ConsoleKey.Escape)
+                {
+                    break;
+                }
+
+
                 if (i % 2 == 0)
                 {
                     if (key == ConsoleKey.W)
                     {
-                        if (snake1.IsEatingPart(Snake.Direction.Up))
+                        if (grid.GetValue(snake1.GetX() - 1, snake1.GetY()) != '*')
                         {
-                            snake1.ReduceLength(1);
-                        }
-                        else
-                        {
-                            snake1.Move(Snake.Direction.Up);
-                        }
+                            if (snake1.IsEatingPart(Snake.Direction.Up))
+                            {
+                                snake1.ReduceLength(1);
+                            }
+                            else
+                            {
+                                snake1.Move(Snake.Direction.Up);
+                            }
 
-                        i++;
+                            i++;
+                        }
+                            
                     }
                     if (key == ConsoleKey.S)
                     {
-                        if (snake1.IsEatingPart(Snake.Direction.Down))
+                        if (grid.GetValue(snake1.GetX() + 1, snake1.GetY()) != '*')
                         {
-                            snake1.ReduceLength(1);
-                        }
-                        else
-                        {
-                            snake1.Move(Snake.Direction.Down);
-                        }
+                            if (snake1.IsEatingPart(Snake.Direction.Down))
+                            {
+                                snake1.ReduceLength(1);
+                            }
+                            else
+                            {
+                                snake1.Move(Snake.Direction.Down);
+                            }
 
-                        i++;
+                            i++;
+                        }
                     }
                     if (key == ConsoleKey.A)
                     {
-                        if (snake1.IsEatingPart(Snake.Direction.Left))
+                        if (grid.GetValue(snake1.GetX(), snake1.GetY() - 1) != '*')
                         {
-                            snake1.ReduceLength(1);
-                        }
-                        else
-                        {
-                            snake1.Move(Snake.Direction.Left);
-                        }
+                            if (snake1.IsEatingPart(Snake.Direction.Left))
+                            {
+                                snake1.ReduceLength(1);
+                            }
+                            else
+                            {
+                                snake1.Move(Snake.Direction.Left);
+                            }
 
-                        i++;
+                            i++;
+                        }
                     }
                     if (key == ConsoleKey.D)
                     {
-                        if (snake1.IsEatingPart(Snake.Direction.Right))
+                        if (grid.GetValue(snake1.GetX(), snake1.GetY() + 1) != '*')
                         {
-                            snake1.ReduceLength(1);
-                        }
-                        else
-                        {
-                            snake1.Move(Snake.Direction.Right);
-                        }
+                            if (snake1.IsEatingPart(Snake.Direction.Right))
+                            {
+                                snake1.ReduceLength(1);
+                            }
+                            else
+                            {
+                                snake1.Move(Snake.Direction.Right);
+                            }
 
-                        i++;
+                            i++;
+                        }
                     }
                 }
                 else
                 {
                     if (key == ConsoleKey.UpArrow)
                     {
-                        if (snake2.IsEatingPart(Snake.Direction.Up))
+                        if (grid.GetValue(snake2.GetX() - 1, snake2.GetY()) != '*')
                         {
-                            snake2.ReduceLength(1);
-                        }
-                        else
-                        {
-                            snake2.Move(Snake.Direction.Up);
-                        }
+                            if (snake2.IsEatingPart(Snake.Direction.Up))
+                            {
+                                snake2.ReduceLength(1);
+                            }
+                            else
+                            {
+                                snake2.Move(Snake.Direction.Up);
+                            }
 
-                        i++;
+                            i++;
+                        }
                     }
                     if (key == ConsoleKey.DownArrow)
                     {
-                        if (snake2.IsEatingPart(Snake.Direction.Down))
+                        if (grid.GetValue(snake2.GetX() + 1, snake2.GetY() ) != '*')
                         {
-                            snake2.ReduceLength(1);
-                        }
-                        else
-                        {
-                            snake2.Move(Snake.Direction.Down);
-                        }
+                            if (snake2.IsEatingPart(Snake.Direction.Down))
+                            {
+                                snake2.ReduceLength(1);
+                            }
+                            else
+                            {
+                                snake2.Move(Snake.Direction.Down);
+                            }
 
-                        i++;
+                            i++;
+                        }
                     }
                     if (key == ConsoleKey.LeftArrow)
                     {
-                        if (snake2.IsEatingPart(Snake.Direction.Left))
+                        if (grid.GetValue(snake2.GetX(), snake2.GetY() - 1) != '*')
                         {
-                            snake2.ReduceLength(1);
-                        }
-                        else
-                        {
-                            snake2.Move(Snake.Direction.Left);
-                        }
+                            if (snake2.IsEatingPart(Snake.Direction.Left))
+                            {
+                                snake2.ReduceLength(1);
+                            }
+                            else
+                            {
+                                snake2.Move(Snake.Direction.Left);
+                            }
 
-                        i++;
+                            i++;
+                        }
                     }
                     if (key == ConsoleKey.RightArrow)
                     {
-                        if (snake2.IsEatingPart(Snake.Direction.Right))
+                        if (grid.GetValue(snake2.GetX(), snake2.GetY() + 1) != '*')
                         {
-                            snake2.ReduceLength(1);
-                        }
-                        else
-                        {
-                            snake2.Move(Snake.Direction.Right);
-                        }
+                            if (snake2.IsEatingPart(Snake.Direction.Right))
+                            {
+                                snake2.ReduceLength(1);
+                            }
+                            else
+                            {
+                                snake2.Move(Snake.Direction.Right);
+                            }
 
-                        i++;
+                            i++;
+                        }
                     }
                 }
 
-                int snake1Score = 0;
-                int snake2Score = 0;
+                
                 if (snake1.GetX() == goalRow && snake1.GetY() == goalCol)
                 {
                     snake1.AddLength(goalPoint);
                     snake1Score += goalPoint;
-                    SpawnRandomFood(rows, cols, out goalRow, out goalCol, out goalPoint);
+                    SpawnRandomFood(grid, rows, cols, out goalRow, out goalCol, out goalPoint);
                 }
 
                 if (snake2.GetX() == goalRow && snake2.GetY() == goalCol)
                 {
                     snake2.AddLength(goalPoint);
                     snake2Score += goalPoint;
-                    SpawnRandomFood(rows, cols, out goalRow, out goalCol, out goalPoint);
+                    SpawnRandomFood(grid, rows, cols, out goalRow, out goalCol, out goalPoint);
                 }
 
-                Output.WriteOnBottomLine($"Snake 1 length: {snake1.Length,2} and score: {snake1Score}, Snake 2 length: {snake2.Length,2} and score: {snake2Score}");
+                Output.WriteOnBottomLine($"Player 1 length: {snake1.Length,2} and score: {snake1Score}, Player 2 length: {snake2.Length,2} and score: {snake2Score}");
             }
+            Console.Clear();
+            Output.WriteLine(ConsoleColor.Magenta, $"The gam result is:");
+            Console.WriteLine($"Player 1 total score: {snake1.Length + snake1Score}, Player 2 total score: {snake2.Length + snake2Score}");
         }
 
-        private static void SpawnRandomFood(int rows, int cols, out int goalRow, out int goalCol, out int goalPoint)
+        private static void SpawnRandomFood(Grid<char> grid, int rows, int cols, out int goalRow, out int goalCol, out int goalPoint)
         {
             Random rnd = new Random();
             goalRow = rnd.Next(1, rows - 2);
             goalCol = rnd.Next(1, cols - 2);
             goalPoint = GetRandomFood();
+            grid.SetValue(goalRow, goalCol, Convert.ToChar(goalPoint));
             Output.WriteAt(ConsoleColor.Yellow, goalPoint, goalCol, goalRow);
         }
 
