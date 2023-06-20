@@ -42,6 +42,7 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
             Menu menu = new Menu(
                 new Option("Start"),
+                new Option("Start Two Player", Game2P.Run),
                 new Option("Settings", Config.Init),
                 new Option("Score Board", ScoreBoard)
                 );
@@ -158,15 +159,12 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
                         case ConsoleKey.UpArrow:
                             if (grid.GetValue(snake.GetX() - 1, snake.GetY()) != '*')
                             {
-                                if (!snake.IsEatingPart(Snake.Direction.Up))
-                                {
-                                    snake.Move(Snake.Direction.Up);
-                                }
-                                else
+                                if (snake.IsEatingPart(Snake.Direction.Up))
                                 {
                                     snake.ReduceLength(1);
                                     score--;
                                 }
+                                snake.Move(Snake.Direction.Up);
                             }
                                 
                             break;
@@ -174,45 +172,36 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
                         case ConsoleKey.DownArrow:
                             if (grid.GetValue(snake.GetX() + 1, snake.GetY()) != '*')
                             {
-                                if (!snake.IsEatingPart(Snake.Direction.Down))
-                                {
-                                    snake.Move(Snake.Direction.Down);
-                                }
-                                else
+                                if (snake.IsEatingPart(Snake.Direction.Down))
                                 {
                                     snake.ReduceLength(1);
                                     score--;
                                 }
+                                snake.Move(Snake.Direction.Down);
                             }
                             break;
                         case ConsoleKey.A:
                         case ConsoleKey.LeftArrow:
                             if (grid.GetValue(snake.GetX(), snake.GetY() - 1) != '*')
                             {
-                                if (!snake.IsEatingPart(Snake.Direction.Left))
-                                {
-                                    snake.Move(Snake.Direction.Left);
-                                }
-                                else
+                                if (snake.IsEatingPart(Snake.Direction.Left))
                                 {
                                     snake.ReduceLength(1);
                                     score--;
                                 }
+                                snake.Move(Snake.Direction.Left);
                             }
                             break;
                         case ConsoleKey.D:
                         case ConsoleKey.RightArrow:
                             if (grid.GetValue(snake.GetX(), snake.GetY() + 1) != '*')
                             {
-                                if (!snake.IsEatingPart(Snake.Direction.Right))
-                                {
-                                    snake.Move(Snake.Direction.Right);
-                                }
-                                else
+                                if (snake.IsEatingPart(Snake.Direction.Right))
                                 {
                                     snake.ReduceLength(1);
                                     score--;
                                 }
+                                snake.Move(Snake.Direction.Right);
                             }
                             break;
                     }

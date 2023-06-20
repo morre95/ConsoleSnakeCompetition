@@ -37,11 +37,22 @@
             Console.ResetColor();
         }
 
+        public static void WriteAt(ConsoleColor color, object? value, int left, int top)
+        {
+            int x = Console.CursorLeft;
+            int y = Console.CursorTop;
+            Console.ForegroundColor = color;
+            Console.SetCursorPosition(left, top);
+            Console.Write(value);
+            Console.ResetColor();
+            Console.SetCursorPosition(x, y);
+        }
+
         public static void WriteOnBottomLine(string text)
         {
             int x = Console.CursorLeft;
             int y = Console.CursorTop;
-            Console.CursorTop = Console.WindowTop + Console.WindowHeight - 1;
+            Console.SetCursorPosition(0, Console.WindowTop + Console.WindowHeight - 1);
             Write(Console.ForegroundColor, text);
             Console.SetCursorPosition(x, y);
         }
@@ -50,7 +61,7 @@
         {
             int x = Console.CursorLeft;
             int y = Console.CursorTop;
-            Console.CursorTop = Console.WindowTop + Console.WindowHeight - 1;
+            Console.SetCursorPosition(0, Console.WindowTop + Console.WindowHeight - 1);
             Write(color, text);
             Console.SetCursorPosition(x, y);
         }

@@ -23,9 +23,10 @@ namespace ConsoleSnakeCompetition.Pages.Admin
             var menu = new Menu(
                 new Option("Home", Game.Init),
                 new Option("Game Speed", SetSpeed),
-                new Option("Computer Speed", SetComputerSpeed),
-                new Option("Best of", SetBestOf),
+                new Option("Increase Speed", SetComputerSpeed),
                 new Option("Theme Color", SelectThemeColor),
+                new Option("Best of", SetBestOf),
+                new Option("Starting Length", SetStartLength),
                 new Option("Food Color", SelectFoodColor),
                 new Option("Editor", GridEditor.Init),
                 new Option("Remove scores", RemoveAllScores)
@@ -214,7 +215,7 @@ namespace ConsoleSnakeCompetition.Pages.Admin
             Console.WriteLine("Press Enter to continue...");
             Console.ReadLine();
 
-            AppSettings.Instance.Speed = selectedValue;
+            AppSettings.Instance.IncreaseSpeedEvery = selectedValue;
 
             AppSettings.Instance.SaveSettings();
             Init();
@@ -253,6 +254,42 @@ namespace ConsoleSnakeCompetition.Pages.Admin
             Console.ReadLine();
 
             AppSettings.Instance.Speed = selectedValue;
+
+            AppSettings.Instance.SaveSettings();
+            Init();
+        }
+
+        private static void SetStartLength()
+        {
+            var selectedValue = AppSettings.Instance.Player1StartLength;
+            Console.CursorVisible = false;
+            do
+            {
+                Console.Clear();
+                Console.Write($"Player Starting Length: {selectedValue}");
+                var key = Console.ReadKey(true).Key;
+                if (key == ConsoleKey.UpArrow)
+                {
+                    selectedValue++;
+                }
+                else if (key == ConsoleKey.DownArrow)
+                {
+                    selectedValue--;
+                    if (selectedValue < 1) { selectedValue = 1; }
+                }
+                else if (key == ConsoleKey.Enter)
+                {
+                    break;
+                }
+
+            } while (true);
+
+            Console.Clear();
+            Console.WriteLine($"Player starts with {selectedValue} in length");
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadLine();
+
+            AppSettings.Instance.Player1StartLength = selectedValue;
 
             AppSettings.Instance.SaveSettings();
             Init();

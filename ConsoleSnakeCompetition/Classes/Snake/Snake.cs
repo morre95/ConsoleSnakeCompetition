@@ -9,19 +9,31 @@ namespace ConsoleSnakeCompetition.Classes.Snake
             Up, Down, Left, Right
         }
 
-        public char Symbol { get; private set; }
+        public char Symbol
+        {
+            get; private set;
+        }
 
         public readonly char[] BodyTailSymbols = new char[4] { '^', 'v', '<', '>' };
 
-        public Direction CurrentDirection { get; private set; }
+        public Direction CurrentDirection
+        {
+            get; private set;
+        }
 
         private SnakePart[] _body;
         public SnakePart Head => _body.First();
         public SnakePart Tail => _body.Last();
         public int Length => _body.Length;
 
-        public bool DrawColorized { get; private set; }
-        public bool ColorInverted { get; private set; }
+        public bool DrawColorized
+        {
+            get; private set;
+        }
+        public bool ColorInverted
+        {
+            get; private set;
+        }
 
         public Snake(Point startingPoint, int length, char symbol = '#', bool drawColorized = false, bool colorInverted = false)
         {
@@ -42,6 +54,7 @@ namespace ConsoleSnakeCompetition.Classes.Snake
                 if (DrawColorized) snakePart.DrawColorized(ColorInverted);
                 else snakePart.Draw();
             }
+            Head.Draw();
         }
 
         public void Erase()
@@ -200,7 +213,7 @@ namespace ConsoleSnakeCompetition.Classes.Snake
                 return;
             }
 
-            Erase();
+            Tail.Erase();
             Array.Resize(ref _body, _body.Length - length);
             Draw();
         }
@@ -211,7 +224,14 @@ namespace ConsoleSnakeCompetition.Classes.Snake
             {
                 Erase();
                 Thread.Sleep(500);
-                Draw();
+                //Draw();
+
+                foreach (var snakePart in _body)
+                {
+                    snakePart.DrawColorized(ColorInverted);
+                }
+                Head.Draw();
+
                 Thread.Sleep(500);
             }
         }
