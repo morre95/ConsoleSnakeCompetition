@@ -10,15 +10,11 @@ namespace ConsoleSnakeCompetition
 {
     internal class Program
     {
-        // TBD: Kolla om det går att använda GetXYAhead(bool) till något
         // TODO: Lägg till svårighetsgrader tex. easy, normal, hard
         // TODO: Skapa banor som finns vid installation, kan vara kopplade till svårighets nivåerna
         // TODO: Med olika banor skulle man kunna stiga i svårighetsgrad
         // TODO: Kanske xp kan vara något att införa
 
-        // TBD:    Nedanstående
-        // TODO: Gör spelet multiplayer, player 1 mot player 2, kanske till och med online alt. lokalt nätverk eller båda
-        // TODO: Gör så man kan samarbeta mot datorn, kanske till och med online alt. lokalt nätverk eller båda
         static void Main(string[] args)
         {
             Setup.Init();
