@@ -42,7 +42,7 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
             Menu menu = new Menu(
                 new Option("Start"),
-                new Option("Start Two Player", Game2P.Run),
+                new Option("Two Player", Game2P.Run),
                 new Option("Settings", Config.Init),
                 new Option("Score Board", ScoreBoard)
                 );

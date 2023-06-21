@@ -13,25 +13,14 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 {
     internal class Game2P
     {
+        // TODO: Fixa så att man vinner om man äter upp den andra ormens huvud
+        // TODO: Få ett extra poäng om man äter upp andra ormens kropp
         public static void Run()
         {
             Console.Clear();
             int rows = Console.WindowHeight - 2;
             int cols = Console.WindowWidth - 2;
 
-            /*for (int row = 0; row < rows; row++)
-            {
-                for (int col = 0; col < cols; col++)
-                {
-                    if (row == 0 || row > rows - 2 || col == 0 || col > cols - 2)
-                    {
-                        Output.WriteAt(ConsoleColor.Green, "*", col, row);
-                    }
-                }
-                Console.WriteLine();
-            }*/
-
-            // FIXME: Fortstätt att porta över från enbart top, left cords till Grid<char> x, y
             Grid<char> grid = Load.PopulateEmptyGrid(rows, cols);
 
             DrawGrid(grid, ConsoleColor.Magenta);
