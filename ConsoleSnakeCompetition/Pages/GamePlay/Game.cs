@@ -41,8 +41,9 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
             ascii.ForEach(Console.WriteLine);
 
             Menu menu = new Menu(
-                new Option("Start"),
+                new Option("Start", InitRun),
                 new Option("Two Player", Game2P.Run),
+                new Option("Tournament", GameTournament.Run),
                 new Option("Settings", Config.Init),
                 new Option("Score Board", ScoreBoard)
                 );
@@ -51,6 +52,22 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
             menu.Display();
 
+            
+        }
+
+        private static void ScoreBoard()
+        {
+            ScoreBoard score = new TopScoreBoard();
+            score.Load();
+
+            Console.Clear();
+            Console.WriteLine(score);
+            WaitTermination();
+            Init();
+        }
+
+        static void InitRun()
+        {
             Console.Clear();
             Grid<char> grid = Load.SelectGrid();
 
@@ -70,20 +87,10 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
             Run(grid);
         }
 
-        private static void ScoreBoard()
-        {
-            ScoreBoard score = new TopScoreBoard();
-            score.Load();
-
-            Console.Clear();
-            Console.WriteLine(score);
-            WaitTermination();
-            Init();
-        }
-
 
         static void Run(Grid<char> grid)
         {
+
             ConsoleColor consoleColor;
 
             if (!Enum.TryParse(AppSettings.Instance.ThemeColor, out consoleColor))

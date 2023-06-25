@@ -22,7 +22,7 @@ namespace ConsoleSnakeCompetition.Utilities
         public int MaxSpeedValue { get; set; } = 1000;
         public int StepStepCount { get; set; } = 100;
 
-        public string Player1Name { get; set; } = string.Empty;
+        public string Player1Name { get; set; } = "Player 1";
         public bool Player1Colorized { get; set; } = true;
         public bool Player1ColorInverted { get; set; } = false;
         public char Player1Symbol { get; set; } = '#';
@@ -30,7 +30,7 @@ namespace ConsoleSnakeCompetition.Utilities
         public bool Player1DieWhenEaten { get; set; } = true;
          
 
-        public string Player2Name { get; set; } = string.Empty;
+        public string Player2Name { get; set; } = "Player 2";
         public bool Player2Colorized { get; set; } = true;
         public bool Player2ColorInverted { get; set; } = true;
         public char Player2Symbol { get; set; } = '&';

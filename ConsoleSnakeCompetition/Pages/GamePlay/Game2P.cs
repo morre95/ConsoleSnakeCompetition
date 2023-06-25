@@ -13,10 +13,12 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 {
     internal class Game2P
     {
-        // TODO: Fixa så att man vinner om man äter upp den andra ormens huvud
-        // TODO: Få ett extra poäng om man äter upp andra ormens kropp
+        // TBD: Få ett extra poäng om man äter upp andra ormens kropp
         public static void Run()
         {
+            string player1Name = AppSettings.Instance.Player1Name;
+            string player2Name = AppSettings.Instance.Player2Name;
+
             Console.Clear();
             int rows = Console.WindowHeight - 2;
             int cols = Console.WindowWidth - 2;
@@ -131,6 +133,13 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
                             i++;
                         }
                     }
+                    if (snake1.GetX() == snake2.GetX() && snake1.GetY() == snake2.GetY())
+                    {
+                        snake2.ReduceLength(snake2.Length - 1);
+                        snake2.Loose();
+                        snake2Score = 0;
+                        break;
+                    }
                 }
                 else
                 {
@@ -198,6 +207,14 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
                             i++;
                         }
                     }
+
+                    if (snake1.GetX() == snake2.GetX() && snake1.GetY() == snake2.GetY())
+                    {
+                        snake1.ReduceLength(snake1.Length - 1);
+                        snake1.Loose();
+                        snake1Score = 0;
+                        break;
+                    }
                 }
 
                 
@@ -215,11 +232,24 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
                     SpawnRandomFood(grid, rows, cols, out goalRow, out goalCol, out goalPoint);
                 }
 
-                Output.WriteOnBottomLine($"Player 1 length: {snake1.Length,2} and score: {snake1Score}, Player 2 length: {snake2.Length,2} and score: {snake2Score}");
+                Output.WriteOnBottomLine($"{player1Name} length: {snake1.Length,2} and score: {snake1Score}, {player2Name} length: {snake2.Length,2} and score: {snake2Score}");
             }
             Console.Clear();
-            Output.WriteLine(ConsoleColor.Magenta, $"The gam result is:");
-            Console.WriteLine($"Player 1 total score: {snake1.Length + snake1Score}, Player 2 total score: {snake2.Length + snake2Score}");
+            Output.WriteLine(ConsoleColor.Magenta, $"The game result is:");
+            Console.WriteLine($"{player1Name} total score: {snake1.Length + snake1Score}, {player2Name} total score: {snake2.Length + snake2Score}");
+            if (snake1.Length + snake1Score > snake2.Length + snake2Score)
+            {
+                Console.WriteLine($"{player1Name} won");
+            }
+            else if (snake1.Length + snake1Score == snake2.Length + snake2Score)
+            {
+                Console.WriteLine("It was a draw");
+            }
+            else
+            {
+                Console.WriteLine($"{player2Name} won");
+            }
+            
         }
 
         private static void SpawnRandomFood(Grid<char> grid, int rows, int cols, out int goalRow, out int goalCol, out int goalPoint)
