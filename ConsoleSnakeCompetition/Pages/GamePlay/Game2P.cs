@@ -13,8 +13,14 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 {
     internal class Game2P
     {
+
+        public static void InitRun()
+        {
+            Run();
+        }
+
         // TBD: Få ett extra poäng om man äter upp andra ormens kropp
-        public static void Run()
+        public static string Run()
         {
             string player1Name = AppSettings.Instance.Player1Name;
             string player2Name = AppSettings.Instance.Player2Name;
@@ -240,14 +246,23 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
             if (snake1.Length + snake1Score > snake2.Length + snake2Score)
             {
                 Console.WriteLine($"{player1Name} won");
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey(true);
+                return player1Name;
             }
             else if (snake1.Length + snake1Score == snake2.Length + snake2Score)
             {
                 Console.WriteLine("It was a draw");
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey(true);
+                return null;
             }
             else
             {
                 Console.WriteLine($"{player2Name} won");
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey(true);
+                return player2Name;
             }
             
         }
