@@ -13,7 +13,7 @@ namespace ConsoleSnakeCompetition
         // TODO: Lägg till svårighetsgrader tex. easy, normal, hard
         // TODO: Skapa banor som finns vid installation, kan vara kopplade till svårighets nivåerna
         // TODO: Med olika banor skulle man kunna stiga i svårighetsgrad
-        // TODO: Kanske xp kan vara något att införa
+        // TBD: Kanske xp kan vara något att införa
 
         static void Main(string[] args)
         {

@@ -18,8 +18,6 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
             var players = CreatePlayers();
 
-            // INFO: använd Game2P.cs Run metoden för omgångarna, ändra om det behövs i den
-            // INFO: Det är förberett så man kan använda AppSettings.Instance.Player1Name och .Player1Name för att visa rätt namn i runderna
             // INFO: Använd tex en json fil för att spara bracketen för turneringen
             // INFO: 
             while (players.Count > 1)
@@ -66,16 +64,26 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
         {
             var matchups = new List<Matchup>();
 
+            if (players.Count % 2 != 0)
+            {
+                var random = new Random();
+                var missingPlayerIndex = random.Next(players.Count);
+                var missingPlayer = players[missingPlayerIndex];
+                matchups.Add(new Matchup(missingPlayer, null));
+
+                players.RemoveAt(missingPlayerIndex);
+            }
+
             for (int i = 0; i < players.Count / 2; i++)
             {
                 matchups.Add(new Matchup(players[i], players[players.Count - (i + 1)]));
             }
 
-            if (players.Count % 2 != 0)
+            /*if (players.Count % 2 != 0)
             {
                 var missingPlayer = players[players.Count / 2];
                 matchups.Add(new Matchup(missingPlayer, null));
-            }
+            }*/
 
             return matchups;
         }
@@ -134,42 +142,44 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
 
                 // FIXME: Behöver provköras. Något galet när turnerings resultatet visas. Svårt att förstå eller helt fel
-                Console.WriteLine($"Next up is: {matchup.PlayerA.Name} vs {matchup.PlayerB.Name}");
-                Console.WriteLine("Press any key to continue...");
-                Console.ReadKey(true);
-
-                AppSettings.Instance.Player1Name = matchup.PlayerA.Name;
-                AppSettings.Instance.Player2Name = matchup.PlayerB.Name;
-
-                string winner = Game2P.Run();
-                if (winner == matchup.PlayerA.Name) 
-                {
-                    matchup.PlayerA.Points++;
-                    players.Add(matchup.PlayerA);
-                } 
-                else if (winner == matchup.PlayerB.Name)
-                {
-                    matchup.PlayerB.Points++;
-                    players.Add(matchup.PlayerB);
-                }
-                else if (winner == null)
-                {
-                    Console.WriteLine("It was a draw");
-                    Console.Write("Play again? y = yes, n = no ");
-                    string yesOrNo = Console.ReadLine();
-                    while (yesOrNo != "y" && yesOrNo != "n")
-                    {
-                        Console.WriteLine($"'{yesOrNo}' is not valid. Try again");
-                        yesOrNo = Console.ReadLine();
-                    }
-
-                    Console.ReadKey(true);
-                }
-               
-
+                RunMatch(players, matchup);
             }
 
             return players;
+        }
+
+        private static void RunMatch(List<Player> players, Matchup matchup)
+        {
+            Console.WriteLine($"Next up is: {matchup.PlayerA.Name} vs {matchup.PlayerB.Name}");
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey(true);
+
+            AppSettings.Instance.Player1Name = matchup.PlayerA.Name;
+            AppSettings.Instance.Player2Name = matchup.PlayerB.Name;
+
+            string winner = Game2P.Run();
+            if (winner == matchup.PlayerA.Name)
+            {
+                matchup.PlayerA.Points++;
+                players.Add(matchup.PlayerA);
+            }
+            else if (winner == matchup.PlayerB.Name)
+            {
+                matchup.PlayerB.Points++;
+                players.Add(matchup.PlayerB);
+            }
+            else if (winner == null)
+            {
+                Console.WriteLine("It was a draw");
+                if (UtilsConsole.Confirm("Play the match again?"))
+                {
+                    RunMatch(players, matchup);
+                }
+            }
+            else 
+            {
+                throw new InvalidOperationException();
+            }
         }
     }
 }
