@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using ConsoleSnakeCompetition.Classes.Tournament;
 using ConsoleSnakeCompetition.Utilities;
 
 namespace ConsoleSnakeCompetition.Pages.GamePlay
@@ -133,7 +134,7 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
 
                 // FIXME: Behöver provköras. Något galet när turnerings resultatet visas. Svårt att förstå eller helt fel
-                Console.WriteLine($"{matchup.PlayerA.Name} vs {matchup.PlayerB.Name}");
+                Console.WriteLine($"Next up is: {matchup.PlayerA.Name} vs {matchup.PlayerB.Name}");
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey(true);
 
@@ -169,65 +170,6 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
             }
 
             return players;
-        }
-    }
-
-    public class Player
-    {
-        public Player(string name, int point)
-        {
-            Name = name;
-            Points = point;
-        }
-
-        public string Name
-        {
-            get; set;
-        }
-
-        public int Points
-        {
-            get; set;
-        }
-
-        public static Player operator <(Player pA, Player pB)
-        {
-            if (pB == null) return pA;
-            return pA.Points < pB.Points ? pA : pB;
-        }
-
-        public static Player operator >(Player pA, Player pB)
-        {
-            if (pB == null) return pA;
-            return pA.Points > pB.Points ? pA : pB;
-        }
-    }
-
-    public class Matchup
-    {
-        public Matchup(Player pA, Player pB = null)
-        {
-            PlayerA = pA;
-            PlayerB = pB;
-        }
-
-        public Player PlayerA
-        {
-            get; set;
-        }
-        public Player PlayerB
-        {
-            get; set;
-        }
-
-        public override string ToString()
-        {
-            return PlayerB == null ? $"{PlayerA.Name} has a free run" : $"{PlayerA.Name} vs. {PlayerB.Name}";
-        }
-
-        public Player GetFavored()
-        {
-            return PlayerA > PlayerB;
         }
     }
 }

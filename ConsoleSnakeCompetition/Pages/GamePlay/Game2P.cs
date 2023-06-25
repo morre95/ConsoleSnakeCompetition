@@ -216,6 +216,8 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
                     if (snake1.GetX() == snake2.GetX() && snake1.GetY() == snake2.GetY())
                     {
+                        // TBD: Fixa något annat sätt att nolla poängen än att sätta´dra av längden och sätta score till 0. Det blir lika med 1 i resultatet, borde vara 0
+                        // TBD: Tex. Skapa en points attribut i snake klassen...
                         snake1.ReduceLength(snake1.Length - 1);
                         snake1.Loose();
                         snake1Score = 0;
