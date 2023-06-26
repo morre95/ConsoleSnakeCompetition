@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -158,27 +159,35 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
                 if (Console.KeyAvailable)
                 {
                     var key = Console.ReadKey(true).Key;
-                    if (key == ConsoleKey.Q) break;
+                    if (key == ConsoleKey.Q || key == ConsoleKey.Escape) break;
 
+                    char aheadChar;
                     switch (key)
                     {
                         case ConsoleKey.W:
                         case ConsoleKey.UpArrow:
-                            if (grid.GetValue(snake.GetX() - 1, snake.GetY()) != '*')
+                            aheadChar = grid.GetValue(snake.GetXAhead(Snake.Direction.Up), snake.GetYAhead(Snake.Direction.Up));
+                            if (aheadChar != '*')
                             {
+                                score = CheckIfScore(grid, Snake.Direction.Up, snake, score, aheadChar);
+
                                 if (snake.IsEatingPart(Snake.Direction.Up))
                                 {
                                     snake.ReduceLength(1);
                                     score--;
                                 }
+
                                 snake.Move(Snake.Direction.Up);
                             }
-                                
+
                             break;
                         case ConsoleKey.S:
                         case ConsoleKey.DownArrow:
-                            if (grid.GetValue(snake.GetX() + 1, snake.GetY()) != '*')
+                            aheadChar = grid.GetValue(snake.GetXAhead(Snake.Direction.Down), snake.GetYAhead(Snake.Direction.Down));
+                            if (aheadChar != '*')
                             {
+                                score = CheckIfScore(grid, Snake.Direction.Down, snake, score, aheadChar);
+
                                 if (snake.IsEatingPart(Snake.Direction.Down))
                                 {
                                     snake.ReduceLength(1);
@@ -189,8 +198,11 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
                             break;
                         case ConsoleKey.A:
                         case ConsoleKey.LeftArrow:
-                            if (grid.GetValue(snake.GetX(), snake.GetY() - 1) != '*')
+                            aheadChar = grid.GetValue(snake.GetXAhead(Snake.Direction.Left), snake.GetYAhead(Snake.Direction.Left));
+                            if (aheadChar != '*')
                             {
+                                score = CheckIfScore(grid, Snake.Direction.Left, snake, score, aheadChar);
+
                                 if (snake.IsEatingPart(Snake.Direction.Left))
                                 {
                                     snake.ReduceLength(1);
@@ -201,8 +213,11 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
                             break;
                         case ConsoleKey.D:
                         case ConsoleKey.RightArrow:
-                            if (grid.GetValue(snake.GetX(), snake.GetY() + 1) != '*')
+                            aheadChar = grid.GetValue(snake.GetXAhead(Snake.Direction.Right), snake.GetYAhead(Snake.Direction.Right));
+                            if (aheadChar != '*')
                             {
+                                score = CheckIfScore(grid, Snake.Direction.Right, snake, score, aheadChar);
+
                                 if (snake.IsEatingPart(Snake.Direction.Right))
                                 {
                                     snake.ReduceLength(1);
@@ -250,6 +265,13 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
                         computer.AddLength(1);
                         computerScore++; 
                     }
+
+                    // TBD: Kanske leta igenom kartan vid uppstart och sök efter siffror eller efter en viss tid
+                    if (int.TryParse(grid.GetValue(computer.GetX(), computer.GetY()).ToString(), out int points))
+                    {
+                        computerScore *= points;
+                    }
+
                 }
 
                 Console.SetCursorPosition(0, grid.RowCount() + 1);
@@ -300,6 +322,32 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
             WaitTermination();
             Init();
+        }
+
+        private static int CheckIfScore(Grid<char> grid, Snake.Direction direction, Snake snake, int score, char aheadChar)
+        {
+            if (int.TryParse(aheadChar.ToString(), out int points))
+            {
+                grid.SetValue(snake.GetXAhead(direction), snake.GetYAhead(direction), ' ');
+                var rand = new Random();
+                switch (rand.Next(11)) // = 1-10
+                {
+                    case 1:
+                    case 2:
+                        score *= points;
+                        break;
+                    case 3:
+                    case 4:
+                        score -= points;
+                        break;
+                    default: 
+                        score += points;
+                        break;
+                }
+                snake.ReduceLength(points);
+            }
+
+            return score;
         }
 
         public static System.Timers.Timer SetInterval(Action Act, int Interval)

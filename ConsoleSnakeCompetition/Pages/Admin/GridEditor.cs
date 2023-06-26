@@ -138,7 +138,7 @@ namespace ConsoleSnakeCompetition.Pages.Admin
                 else if (keyInfo.Key == ConsoleKey.Tab)
                 {
 
-                    char[] fields = new[] { '0', '1', '2', '3' };
+                    char[] fields = new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 
                     int currentIndex = 0;
                     int totalFields = fields.Length;

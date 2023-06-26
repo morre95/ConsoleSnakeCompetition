@@ -66,162 +66,171 @@ namespace ConsoleSnakeCompetition.Pages.GamePlay
 
                 key = Console.ReadKey(true).Key;
 
-                if (key == ConsoleKey.Escape)
+                if (Console.KeyAvailable)
                 {
-                    break;
-                }
-
-
-                if (i % 2 == 0)
-                {
-                    if (key == ConsoleKey.W)
+                    if (key == ConsoleKey.Spacebar)
                     {
-                        if (grid.GetValue(snake1.GetX() - 1, snake1.GetY()) != '*')
-                        {
-                            if (snake1.IsEatingPart(Snake.Direction.Up))
-                            {
-                                snake1.ReduceLength(1);
-                            }
-                            else
-                            {
-                                snake1.Move(Snake.Direction.Up);
-                            }
-
-                            i++;
-                        }
-                            
+                        i++;
                     }
-                    if (key == ConsoleKey.S)
-                    {
-                        if (grid.GetValue(snake1.GetX() + 1, snake1.GetY()) != '*')
-                        {
-                            if (snake1.IsEatingPart(Snake.Direction.Down))
-                            {
-                                snake1.ReduceLength(1);
-                            }
-                            else
-                            {
-                                snake1.Move(Snake.Direction.Down);
-                            }
 
-                            i++;
-                        }
-                    }
-                    if (key == ConsoleKey.A)
+                    if (key == ConsoleKey.Escape)
                     {
-                        if (grid.GetValue(snake1.GetX(), snake1.GetY() - 1) != '*')
-                        {
-                            if (snake1.IsEatingPart(Snake.Direction.Left))
-                            {
-                                snake1.ReduceLength(1);
-                            }
-                            else
-                            {
-                                snake1.Move(Snake.Direction.Left);
-                            }
-
-                            i++;
-                        }
-                    }
-                    if (key == ConsoleKey.D)
-                    {
-                        if (grid.GetValue(snake1.GetX(), snake1.GetY() + 1) != '*')
-                        {
-                            if (snake1.IsEatingPart(Snake.Direction.Right))
-                            {
-                                snake1.ReduceLength(1);
-                            }
-                            else
-                            {
-                                snake1.Move(Snake.Direction.Right);
-                            }
-
-                            i++;
-                        }
-                    }
-                    if (snake1.GetX() == snake2.GetX() && snake1.GetY() == snake2.GetY())
-                    {
-                        snake2.ReduceLength(snake2.Length - 1);
-                        snake2.Loose();
-                        snake2Score = 0;
                         break;
                     }
-                }
-                else
-                {
-                    if (key == ConsoleKey.UpArrow)
+
+                    if (i % 2 == 0)
                     {
-                        if (grid.GetValue(snake2.GetX() - 1, snake2.GetY()) != '*')
+                        if (key == ConsoleKey.W)
                         {
-                            if (snake2.IsEatingPart(Snake.Direction.Up))
+                            if (grid.GetValue(snake1.GetX() - 1, snake1.GetY()) != '*')
                             {
-                                snake2.ReduceLength(1);
-                            }
-                            else
-                            {
-                                snake2.Move(Snake.Direction.Up);
+                                // TBD: Bestäm vilket som är bäst. Att röra sig samtidigt som man äter sig själv. Eller så som Game.cs där man antingen äter sig själv eller rör sig
+                                // Det kanske är olika svårighetsgrader?
+                                if (snake1.IsEatingPart(Snake.Direction.Up))
+                                {
+                                    snake1.ReduceLength(1);
+                                }
+                                else
+                                {
+                                    snake1.Move(Snake.Direction.Up);
+                                }
+
+                                i++;
                             }
 
-                            i++;
+                        }
+                        if (key == ConsoleKey.S)
+                        {
+                            if (grid.GetValue(snake1.GetX() + 1, snake1.GetY()) != '*')
+                            {
+                                if (snake1.IsEatingPart(Snake.Direction.Down))
+                                {
+                                    snake1.ReduceLength(1);
+                                }
+                                else
+                                {
+                                    snake1.Move(Snake.Direction.Down);
+                                }
+
+                                i++;
+                            }
+                        }
+                        if (key == ConsoleKey.A)
+                        {
+                            if (grid.GetValue(snake1.GetX(), snake1.GetY() - 1) != '*')
+                            {
+                                if (snake1.IsEatingPart(Snake.Direction.Left))
+                                {
+                                    snake1.ReduceLength(1);
+                                }
+                                else
+                                {
+                                    snake1.Move(Snake.Direction.Left);
+                                }
+
+                                i++;
+                            }
+                        }
+                        if (key == ConsoleKey.D)
+                        {
+                            if (grid.GetValue(snake1.GetX(), snake1.GetY() + 1) != '*')
+                            {
+                                if (snake1.IsEatingPart(Snake.Direction.Right))
+                                {
+                                    snake1.ReduceLength(1);
+                                }
+                                else
+                                {
+                                    snake1.Move(Snake.Direction.Right);
+                                }
+
+                                i++;
+                            }
+                        }
+                        if (snake1.GetX() == snake2.GetX() && snake1.GetY() == snake2.GetY())
+                        {
+                            snake2.ReduceLength(snake2.Length - 1);
+                            snake2.Loose();
+                            snake2Score = 0;
+                            break;
                         }
                     }
-                    if (key == ConsoleKey.DownArrow)
+                    else
                     {
-                        if (grid.GetValue(snake2.GetX() + 1, snake2.GetY() ) != '*')
+                        if (key == ConsoleKey.UpArrow)
                         {
-                            if (snake2.IsEatingPart(Snake.Direction.Down))
+                            if (grid.GetValue(snake2.GetX() - 1, snake2.GetY()) != '*')
                             {
-                                snake2.ReduceLength(1);
-                            }
-                            else
-                            {
-                                snake2.Move(Snake.Direction.Down);
-                            }
+                                if (snake2.IsEatingPart(Snake.Direction.Up))
+                                {
+                                    snake2.ReduceLength(1);
+                                }
+                                else
+                                {
+                                    snake2.Move(Snake.Direction.Up);
+                                }
 
-                            i++;
+                                i++;
+                            }
                         }
-                    }
-                    if (key == ConsoleKey.LeftArrow)
-                    {
-                        if (grid.GetValue(snake2.GetX(), snake2.GetY() - 1) != '*')
+                        if (key == ConsoleKey.DownArrow)
                         {
-                            if (snake2.IsEatingPart(Snake.Direction.Left))
+                            if (grid.GetValue(snake2.GetX() + 1, snake2.GetY()) != '*')
                             {
-                                snake2.ReduceLength(1);
-                            }
-                            else
-                            {
-                                snake2.Move(Snake.Direction.Left);
-                            }
+                                if (snake2.IsEatingPart(Snake.Direction.Down))
+                                {
+                                    snake2.ReduceLength(1);
+                                }
+                                else
+                                {
+                                    snake2.Move(Snake.Direction.Down);
+                                }
 
-                            i++;
+                                i++;
+                            }
                         }
-                    }
-                    if (key == ConsoleKey.RightArrow)
-                    {
-                        if (grid.GetValue(snake2.GetX(), snake2.GetY() + 1) != '*')
+                        if (key == ConsoleKey.LeftArrow)
                         {
-                            if (snake2.IsEatingPart(Snake.Direction.Right))
+                            if (grid.GetValue(snake2.GetX(), snake2.GetY() - 1) != '*')
                             {
-                                snake2.ReduceLength(1);
-                            }
-                            else
-                            {
-                                snake2.Move(Snake.Direction.Right);
-                            }
+                                if (snake2.IsEatingPart(Snake.Direction.Left))
+                                {
+                                    snake2.ReduceLength(1);
+                                }
+                                else
+                                {
+                                    snake2.Move(Snake.Direction.Left);
+                                }
 
-                            i++;
+                                i++;
+                            }
                         }
-                    }
+                        if (key == ConsoleKey.RightArrow)
+                        {
+                            if (grid.GetValue(snake2.GetX(), snake2.GetY() + 1) != '*')
+                            {
+                                if (snake2.IsEatingPart(Snake.Direction.Right))
+                                {
+                                    snake2.ReduceLength(1);
+                                }
+                                else
+                                {
+                                    snake2.Move(Snake.Direction.Right);
+                                }
 
-                    if (snake1.GetX() == snake2.GetX() && snake1.GetY() == snake2.GetY())
-                    {
-                        // TBD: Fixa något annat sätt att nolla poängen än att sätta´dra av längden och sätta score till 0. Det blir lika med 1 i resultatet, borde vara 0
-                        // TBD: Tex. Skapa en points attribut i snake klassen...
-                        snake1.ReduceLength(snake1.Length - 1);
-                        snake1.Loose();
-                        snake1Score = 0;
-                        break;
+                                i++;
+                            }
+                        }
+
+                        if (snake1.GetX() == snake2.GetX() && snake1.GetY() == snake2.GetY())
+                        {
+                            // TBD: Fixa något annat sätt att nolla poängen än att sätta´dra av längden och sätta score till 0. Det blir lika med 1 i resultatet, borde vara 0
+                            // TBD: Tex. Skapa en points attribut i snake klassen...
+                            snake1.ReduceLength(snake1.Length - 1);
+                            snake1.Loose();
+                            snake1Score = 0;
+                            break;
+                        }
                     }
                 }
 
