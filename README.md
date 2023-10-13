@@ -1,5 +1,5 @@
 # ConsoleSnakeCompetition
-![ConsoleSnakeCompetition Logo](https://img.shields.io/badge/Snake_Competition?logo=csharp&color=%23512BD4) 
+![ConsoleSnakeCompetition Logo](https://img.shields.io/badge/Console_Snake--Competition?logo=csharp&color=%23512BD4) 
 
 ## Overview
 
