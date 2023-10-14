@@ -1,5 +1,6 @@
 # ConsoleSnakeCompetition
-![ConsoleSnakeCompetition Badge](https://img.shields.io/badge/Console_Snake--Competition?logo=csharp&color=%23512BD4)
+
+![ConsoleSnakeCompetition](https://github.com/morre95/ConsoleSnakeCompetition/assets/31042/9c90f449-c524-4bac-8ebb-9dfc9da434d5)
 
 
 ## Overview
