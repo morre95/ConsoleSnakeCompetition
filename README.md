@@ -1,7 +1,6 @@
 # ConsoleSnakeCompetition
 
-![ConsoleSnakeCompetition](https://github.com/morre95/ConsoleSnakeCompetition/assets/31042/9c90f449-c524-4bac-8ebb-9dfc9da434d5)
-
+![Snake Competition Logo](https://github.com/morre95/ConsoleSnakeCompetition/assets/31042/cbbea951-f2be-45de-aa1c-d3da2eff8e82)
 
 ## Overview
 
